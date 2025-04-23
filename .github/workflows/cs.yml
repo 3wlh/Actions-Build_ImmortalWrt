@@ -90,7 +90,7 @@ jobs:
           echo "#### 固件地址 \`10.10.10.254\`" >> info.md
           echo "用户名 \`root\` 密码：无" >> info.md
           echo "#### 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
-          [[ "${{ inputs.docker }}" == "yes" ]] && echo "#### 默认带docker" >> info.md
+          # [[ "${{ inputs.docker }}" == "yes" ]] && echo "#### 默认带docker" >> info.md
           
       - name: Upload ImmortWrt as release assets
         uses: softprops/action-gh-release@v2.2.1
