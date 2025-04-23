@@ -4,7 +4,7 @@ on:
     inputs:
       arch:
         description: |
-          "选择 OpenWrt 架构"
+          选择 OpenWrt 架构
         required: true
         default: "rockchip-armv8-openwrt"
         type: choice
@@ -15,7 +15,7 @@ on:
           
       version:
         description: |
-          "选择 OpenWrt 版本"
+          选择 OpenWrt 版本
         required: true
         default: "24.10.1"
         type: choice
@@ -35,7 +35,7 @@ on:
           
       profile:
         description: |
-          "输入 软路由型号 可选值如下："
+          输入 软路由型号 可选值如下：
         required: true
         default: 'friendlyarm_nanopi-r6s'
         type: choice
@@ -45,7 +45,7 @@ on:
           
       rootfs_partsize:
         description: |
-          "设置软件包大小 单位(MB)"
+          设置软件包大小 单位(MB)
         required: true
         default: '1024'
         type: choice
@@ -57,7 +57,7 @@ on:
           
       enable_pppoe:
         description: |
-          "是否配置PPPoE拨号信息?"
+          是否配置PPPoE拨号信息?
         required: true
         default: 'no'
         type: choice
@@ -67,7 +67,7 @@ on:
         
       pppoe_account:
         description: |
-          "宽带账号 (若启用PPPoE)"
+          宽带账号 (若启用PPPoE)
         required: false
       pppoe_password:
         description: "宽带密码 (若启用PPPoE)"
