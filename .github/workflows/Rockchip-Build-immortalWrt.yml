@@ -1,4 +1,4 @@
-name: build-rockchip-immortalWrt
+name: build-immortalWrt
 on:
   workflow_dispatch:
     inputs:
