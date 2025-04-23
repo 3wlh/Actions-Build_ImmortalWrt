@@ -1,0 +1,137 @@
+name: build-rockchip-immortalWrt
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: |
+          "选择 OpenWrt 架构"
+        required: true
+        default: "rockchip-armv8-openwrt"
+        type: choice
+        options:
+          - rockchip-armv8-openwrt
+          - x86-64-openwrt
+          - armsr-armv8-openwrt
+          
+      version:
+        description: |
+          "选择 OpenWrt 版本"
+        required: true
+        default: "24.10.1"
+        type: choice
+        options:
+          - 23.05.5
+          - 24.10.1
+      
+      docker:
+        description: |
+          是否编译 Docker 插件
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
+         
+      profile:
+        type: choice
+        description: |
+          输入 软路由型号 可选值如下：
+        required: true
+        default: 'friendlyarm_nanopi-r6s'
+        options:
+          - friendlyarm_nanopi-r6s
+          - xunlong_orangepi-5-plus
+
+      rootfs_partsize:
+        description: '设置软件包大小 单位(MB)'
+        required: true
+        default: '1024'
+        options:
+          - 512
+          - 1024
+          - 2048
+          - 4096
+          
+      enable_pppoe:
+        description: "是否配置PPPoE拨号信息?"
+        required: true
+        default: 'no'
+        type: choice
+        options:
+        - 'yes'
+        - 'no'
+      pppoe_account:
+        description: "宽带账号 (若启用PPPoE)"
+        required: false
+      pppoe_password:
+        description: "宽带密码 (若启用PPPoE)"
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set executable permissions
+        run: chmod +x ${{ github.workspace }}/rockchip/build.sh
+        
+      - name: Validate Arch Inputs
+        run: |
+          [[ "${{ inputs.arch }}" == "x86-64-openwrt" ]] && inputs.profile=""
+          [[ "${{ inputs.arch }}" == "armsr-armv8-openwrt" ]] && inputs.profile="generic"
+      
+      - name: Validate PPPoE Inputs
+        run: |
+          if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
+            if [[ -z "${{ inputs.pppoe_account }}" || -z "${{ inputs.pppoe_password }}" ]]; then
+              echo "Error: PPPoE account and password must be provided when PPPoE is enabled!"
+              exit 1
+            fi
+          fi
+
+      - name: Building Rockchip ImmortalWrt
+        run: |
+            docker run --rm -i \
+              --user root \
+              -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
+              -v "${{ github.workspace }}/diy_files/${{ inputs.arch }}/${{ inputs.profile }}:/home/build/immortalwrt/files" \
+              -v "${{ github.workspace }}/diy_build/${{ inputs.arch }}/${{ inputs.profile }}/build.sh:/home/build/immortalwrt/build.sh" \
+              -v "${{ github.workspace }}/diy_build/${{ inputs.arch }}/${{ inputs.profile }}/imm.config:/home/build/immortalwrt/.config" \
+              -e PROFILE=${{ inputs.profile }} \
+              -e INCLUDE_DOCKER=${{ inputs.docker }} \
+              -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
+              -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
+              -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
+              -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
+              immortalwrt/imagebuilder:${{ inputs.arch }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/build.sh
+          done
+      
+      - name: Generate Firmware SHA-256
+        run: |
+          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
+          for file in *.img.gz; do
+            sha256sum "$file" > "$file.sha256"
+            sha256sum -c "$file.sha256"
+          done
+          
+      - name: Create info
+        run: |
+          echo "#### 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >>${{ github.workspace }}/info.md
+          [[ inputs.include_docker }}" == "yes" ]] && echo "#### 默认带docker" >>${{ github.workspace }}/info.md
+          
+      - name: Upload ImmortWrt as release assets
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          tag_name: Autobuild
+          name: ImmortWrt-Rockchip
+          body_path: ${{ github.workspace }}/info.md
+          files: |
+            ${{ github.workspace }}/*.img.gz
+            ${{ github.workspace }}/*.sha256
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
