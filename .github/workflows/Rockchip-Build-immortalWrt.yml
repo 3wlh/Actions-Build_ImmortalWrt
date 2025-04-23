@@ -78,7 +78,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set executable permissions
-        run: chmod +x ${{ github.workspace }}/rockchip/build.sh
+        run: chmod +x ${{ github.workspace }}//diy_build/${{ inputs.arch }}/${{ inputs.profile }}/build.sh
         
       - name: Validate Arch Inputs
         run: |
@@ -96,19 +96,19 @@ jobs:
           
       - name: Building Rockchip ImmortalWrt
         run: |
-            docker run --rm -i \
-              --user root \
-              -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
-              -v "${{ github.workspace }}/diy_files/${{ inputs.arch }}/${{ inputs.profile }}:/home/build/immortalwrt/files" \
-              -v "${{ github.workspace }}/diy_build/${{ inputs.arch }}/${{ inputs.profile }}/build.sh:/home/build/immortalwrt/build.sh" \
-              -v "${{ github.workspace }}/diy_build/${{ inputs.arch }}/${{ inputs.profile }}/imm.config:/home/build/immortalwrt/.config" \
-              -e PROFILE=${{ inputs.profile }} \
-              -e INCLUDE_DOCKER=${{ inputs.docker }} \
-              -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
-              -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
-              -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
-              -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
-              immortalwrt/imagebuilder:${{ inputs.arch }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/build.sh
+          docker run --rm -i \
+            --user root \
+            -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
+            -v "${{ github.workspace }}/diy_files/${{ inputs.arch }}/${{ inputs.profile }}:/home/build/immortalwrt/files" \
+            -v "${{ github.workspace }}/diy_build/${{ inputs.arch }}/${{ inputs.profile }}/build.sh:/home/build/immortalwrt/build.sh" \
+            -v "${{ github.workspace }}/diy_build/${{ inputs.arch }}/${{ inputs.profile }}/imm.config:/home/build/immortalwrt/.config" \
+            -e PROFILE=${{ inputs.profile }} \
+            -e INCLUDE_DOCKER=${{ inputs.docker }} \
+            -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
+            -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
+            -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
+            -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
+            immortalwrt/imagebuilder:${{ inputs.arch }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/build.sh
           done
           
       - name: Generate Firmware SHA-256
