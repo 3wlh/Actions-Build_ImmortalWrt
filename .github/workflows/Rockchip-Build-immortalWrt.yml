@@ -1,4 +1,4 @@
-name: build-immortalWrt
+name: Build-immortalWrt
 on:
   workflow_dispatch:
     inputs:
