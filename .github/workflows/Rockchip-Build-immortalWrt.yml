@@ -22,7 +22,7 @@ on:
         options:
           - 23.05.5
           - 24.10.1
-      
+          
       docker:
         description: |
           是否编译 Docker 插件
@@ -32,7 +32,7 @@ on:
         options:
           - 'yes'
           - 'no'
-         
+          
       profile:
         type: choice
         description: |
@@ -42,7 +42,7 @@ on:
         options:
           - friendlyarm_nanopi-r6s
           - xunlong_orangepi-5-plus
-
+          
       rootfs_partsize:
         description: '设置软件包大小 单位(MB)'
         required: true
@@ -61,6 +61,7 @@ on:
         options:
         - 'yes'
         - 'no'
+        
       pppoe_account:
         description: "宽带账号 (若启用PPPoE)"
         required: false
@@ -83,7 +84,7 @@ jobs:
         run: |
           [[ "${{ inputs.arch }}" == "x86-64-openwrt" ]] && inputs.profile=""
           [[ "${{ inputs.arch }}" == "armsr-armv8-openwrt" ]] && inputs.profile="generic"
-      
+          
       - name: Validate PPPoE Inputs
         run: |
           if [[ "${{ inputs.enable_pppoe }}" == "yes" ]]; then
@@ -109,7 +110,7 @@ jobs:
               -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
               immortalwrt/imagebuilder:${{ inputs.arch }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/build.sh
           done
-      
+          
       - name: Generate Firmware SHA-256
         run: |
           cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
