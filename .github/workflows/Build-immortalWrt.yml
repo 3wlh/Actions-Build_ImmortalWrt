@@ -1,4 +1,4 @@
-name: Build-immortalWrt
+name: Build-ImmortalWrt
 on:
   workflow_dispatch:
     inputs:
@@ -127,17 +127,17 @@ jobs:
         run: |
           touch info.md
           echo "[![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" > info.md
-          echo "#### 固件地址 `10.10.10.254`" >> info.md
-          echo "用户名 `root` 密码：无" >> info.md
+          echo "#### 固件地址 \`10.10.10.254\`" >> info.md
+          echo "用户名 \`root\` 密码：无" >> info.md
           echo "#### 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
           [[ "${{ inputs.docker }}" == "yes" ]] && echo "#### 默认带docker" >> info.md
           
       - name: Upload ImmortWrt as release assets
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: Autobuild
-          name: ImmortWrt-Rockchip
-          body_path: ${{ github.workspace }}/info.md
+          tag_name: Actions-Build
+          name: ImmortWrt-${{ inputs.arch }}-${{ inputs.version }}
+          body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
             ${{ github.workspace }}/*.sha256
