@@ -2,7 +2,7 @@
 # 添加插件
 function Download(){ # 下载函数
 [[ -d "packages/diy_packages" ]] || mkdir -p "packages/diy_packages"
-PACKAGES_NAME=("${1}")
+PACKAGES_NAME=(${1})
 PACKAGES_URL="https://dl.openwrt.ai/latest/packages/aarch64_generic/kiddin9/"
 wget -qO- "${PACKAGES_URL}" | \
 while IFS= read -r LINE; do
@@ -21,11 +21,10 @@ while IFS= read -r LINE; do
     done
 done
 }
-echo "下载插件"
+echo "===============================下载插件==============================="
 Download "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
-echo "========================================================================="
 ls packages/diy_packages
-echo "========================================================================="
+echo "======================================================================"
 # 输出日志
 LOGFILE="/tmp/uci-defaults.log"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
