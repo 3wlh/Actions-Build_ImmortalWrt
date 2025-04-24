@@ -1,20 +1,31 @@
 #!/bin/bash
-# 下载函数
-function Download(){ 
-    [[ -d /home/build/immortalwrt/packages/diy_packages ]] || mkdir -p /home/build/immortalwrt/packages/diy_packages
-    echo "Downloading ${1}"
-    wget -qP /home/build/immortalwrt/packages/diy_packages ${1} --show-progress
+function Download(){ # 下载函数
+[[ -d "packages/diy_packages" ]] || mkdir -p "packages/diy_packages"
+PACKAGES_NAME=("${1}")
+PACKAGES_URL="https://dl.openwrt.ai/latest/packages/aarch64_generic/kiddin9/"
+wget -qO- "${PACKAGES_URL}" | \
+while IFS= read -r LINE; do
+    for PREFIX in "${PACKAGES_NAME[@]}"; do
+        if [[ "$LINE" == *"$PREFIX"* ]]; then
+            FILE=$(echo "$LINE" | grep -Eo 'href="[^"]*' | tr -d 'href="')
+            if [[ -z "$FILE" ]]; then
+                # echo "No file found in line, skipping"
+                continue
+            fi
+            Download_URL="${PACKAGES_URL}${FILE}"
+            echo "Downloading ${Download_URL}"
+            curl -L --fail "$Download_URL" -o "packages/diy_packages/$(basename $FILE_URL)" -#
+            # wget -qP /home/build/immortalwrt/packages/diy_packages ${1} --show-progress
+        fi
+    done
+done
 }
-# 添加插件
 echo "下载插件"
-Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/luci-app-unishare_26.105.65729~ff1ff84_all.ipk"
-Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/unishare_1.0.1-r5_all.ipk"
-Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/webdav2_4.3.1-r4_aarch64_generic.ipk"
-Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/luci-app-v2ray-server_26.105.65729~ff1ff84_all.ipk"
+Download "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
 echo "========================================================================="
-ls /home/build/immortalwrt/packages/diy_packages
+ls packages/diy_packages
 echo "========================================================================="
-# Log file for debugging
+# 输出日志
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 # yml 传入的路由器型号 PROFILE

@@ -1,5 +1,31 @@
 #!/bin/bash
-# Log file for debugging
+function Download(){ # 下载函数
+[[ -d "packages/diy_packages" ]] || mkdir -p "packages/diy_packages"
+PACKAGES_NAME=("${1}")
+PACKAGES_URL="https://dl.openwrt.ai/latest/packages/aarch64_generic/kiddin9/"
+wget -qO- "${PACKAGES_URL}" | \
+while IFS= read -r LINE; do
+    for PREFIX in "${PACKAGES_NAME[@]}"; do
+        if [[ "$LINE" == *"$PREFIX"* ]]; then
+            FILE=$(echo "$LINE" | grep -Eo 'href="[^"]*' | tr -d 'href="')
+            if [[ -z "$FILE" ]]; then
+                # echo "No file found in line, skipping"
+                continue
+            fi
+            Download_URL="${PACKAGES_URL}${FILE}"
+            echo "Downloading ${Download_URL}"
+            curl -L --fail "$Download_URL" -o "packages/diy_packages/$(basename $FILE_URL)" -#
+            # wget -qP /home/build/immortalwrt/packages/diy_packages ${1} --show-progress
+        fi
+    done
+done
+}
+echo "下载插件"
+Download "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
+echo "========================================================================="
+ls packages/diy_packages
+echo "========================================================================="
+# 输出日志
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 # yml 传入的路由器型号 PROFILE
