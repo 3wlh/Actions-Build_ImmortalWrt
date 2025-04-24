@@ -4,7 +4,7 @@ function Download(){ # 下载函数
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
 PACKAGES_NAME=(${1})
-PACKAGES_URL="https://dl.openwrt.ai/latest/packages/aarch64_generic/kiddin9/"
+PACKAGES_URL="https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/"
 wget -qO- "${PACKAGES_URL}" | \
 while IFS= read -r LINE; do
     for PREFIX in "${PACKAGES_NAME[@]}"; do
