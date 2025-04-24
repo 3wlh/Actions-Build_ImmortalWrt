@@ -9,7 +9,7 @@ wget -qO- "${PACKAGES_URL}" | \
 while IFS= read -r LINE; do
     for PREFIX in "${PACKAGES_NAME[@]}"; do
         if [[ "$LINE" == *"$PREFIX"* ]]; then
-            FILE=$(echo "$LINE" | grep -Eo 'href="[^"]*' | tr -d 'href="')
+            FILE=$(echo "$LINE" | grep -Eo 'href="[^"]*' | sed 's/href="//')
             if [[ -z "$FILE" ]]; then
                 # echo "No file found in line, skipping"
                 continue
@@ -25,7 +25,7 @@ done
 echo "===============================下载插件==============================="
 Download "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
 echo "===============================查看插件==============================="
-ls packages/diy_packages
+ls $(pwd)/packages/diy_packages
 echo "======================================================================"
 # 输出日志
 LOGFILE="/tmp/uci-defaults-log.txt"
