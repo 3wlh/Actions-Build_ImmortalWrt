@@ -3,8 +3,8 @@
 function Download(){ # 下载函数
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
-PACKAGES_NAME=(${1})
-PACKAGES_URL="https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/"
+PACKAGES_URL="${1}"
+PACKAGES_NAME=(${2})
 wget -qO- "${PACKAGES_URL}" | \
 while IFS= read -r LINE; do
     for PREFIX in "${PACKAGES_NAME[@]}"; do
@@ -17,13 +17,16 @@ while IFS= read -r LINE; do
             Download_URL="${PACKAGES_URL}${FILE}"
             echo "Downloading ${Download_URL}"
             curl -# --fail "$Download_URL" -o "$(pwd)/packages/diy_packages/$(basename $Download_URL)"
-            # #wget -qO "packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
+            # #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
         fi
     done
 done
 }
 echo "===============================下载插件==============================="
-Download "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
+Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
+"luci-app-unishare unishare webdav2 luci-app-v2ray-server"
+Download "https://dl.openwrt.ai/releases/24.10/targets/armsr/armv8/6.6.86/" \
+"luci-app-turboacc kmod-tcp-bbr kmod-ipt-offload"
 echo "===============================查看插件==============================="
 ls $(pwd)/packages/diy_packages
 echo "======================================================================"
@@ -69,6 +72,7 @@ PACKAGES="$PACKAGES luci-i18n-ramfree-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-app-unishare"
 PACKAGES="$PACKAGES luci-app-v2ray-server"
+PACKAGES="$PACKAGES luci-app-turboacc"
 # DDNS解析
 PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod"
 # PACKAGES="$PACKAGES luci-i18n-diskman-zh-cn"
