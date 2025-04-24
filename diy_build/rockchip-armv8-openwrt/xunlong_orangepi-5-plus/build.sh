@@ -15,8 +15,8 @@ while IFS= read -r LINE; do
             fi
             Download_URL="${PACKAGES_URL}${FILE}"
             echo "Downloading ${Download_URL}"
-            curl -L --fail "$Download_URL" -o "packages/diy_packages/$(basename $FILE_URL)" -#
-            # wget -qP /home/build/immortalwrt/packages/diy_packages ${1} --show-progress
+            curl -# --fail "$Download_URL" -o "packages/diy_packages/$(basename $Download_URL)"
+            # #wget -qO "packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
         fi
     done
 done
