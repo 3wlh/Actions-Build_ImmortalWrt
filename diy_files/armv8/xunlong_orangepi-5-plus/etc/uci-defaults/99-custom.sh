@@ -89,7 +89,7 @@ uci commit network
 #==========================System==========================
 # 更改名称
 Count=$(cat /tmp/sysinfo/model | grep -o ' ' | wc -l)
-[[ Count -ge 4 ]] && Model=$(cat /tmp/sysinfo/model | awk '{print $(NF-1), $NF}')
+[[ $Count -ge 4 ]] && Model=$(cat /tmp/sysinfo/model | awk '{print $(NF-1), $NF}')
 [[ -z "${Model}" ]] && Model=$(cat /tmp/sysinfo/model | awk '{print $NF}')
 uci set system.@system[0].hostname="${Model}"
 uci commit system
