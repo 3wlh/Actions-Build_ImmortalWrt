@@ -78,7 +78,7 @@ jobs:
         
       - name: Configure environment variables
         run: |
-          if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
+          if [ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]; then
             echo "profile=\"generic\"" >> $GITHUB_ENV
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
