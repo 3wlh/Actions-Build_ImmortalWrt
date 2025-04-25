@@ -127,11 +127,11 @@ jobs:
           fi
           
       - name: Upload bin directory
-      uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-      with:
-        name: Build_bin_${{ env.config }}
-        path: ${{ github.workspace }}/bin
+        uses: actions/upload-artifact@main
+        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        with:
+          name: Build_bin_${{ env.config }}
+          path: ${{ github.workspace }}/bin
         
       - name: Upload ImmortWrt as release assets
         uses: softprops/action-gh-release@v2.2.1
