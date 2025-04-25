@@ -61,7 +61,7 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
 PACKAGES=""
 PACKAGES="$PACKAGES bash uci luci uhttpd luci-base curl openssl-util"
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
-PACKAGES="$PACKAGES libustream-mbedtls lsblk nano resolveip swconfig wget-ssl zram-swap"
+PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
