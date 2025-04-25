@@ -11,7 +11,7 @@ if [ -f "$SETTINGS_FILE" ]; then
    . "$SETTINGS_FILE"
 fi
 #====================设置LAN口IP====================
-uci set network.lan.ipaddr='10.10.10.254'
+uci set network.lan.ipaddr='10.10.100.1'
 uci commit network
 
 #==========================Dropbear==========================
