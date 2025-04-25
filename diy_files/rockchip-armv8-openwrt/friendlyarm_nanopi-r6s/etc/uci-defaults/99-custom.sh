@@ -6,9 +6,7 @@ echo "Starting 99-custom.sh at $(date '+%Y-%m-%d %H:%M:%S')" >> $LOGFILE
 
 # 检查配置文件diy-settings是否存在
 SETTINGS_FILE="/etc/config/diy-settings"
-if [ ! -f "$SETTINGS_FILE" ]; then
-    echo "settings file not found. Skipping." >> $LOGFILE
-else
+if [ -f "$SETTINGS_FILE" ]; then
    # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
    . "$SETTINGS_FILE"
 fi
@@ -74,7 +72,10 @@ uci set network.wan.device="eth1"
 # 删除 WAN6 口
 uci -q delete network.wan6
 # 设置拨号协议
-uci set network.wan.proto="pppoe"
+if $enable_pppoe; then
+	uci set network.wan.proto="pppoe"
+	echo "PPPoE_Protocol configuration completed successfully." >> $LOGFILE
+fi
 if [ -n "${pppoe_account}" ]; then
    uci set network.wan.username=$pppoe_account
    echo "PPPoE_Account configuration completed successfully." >> $LOGFILE
