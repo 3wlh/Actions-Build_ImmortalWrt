@@ -25,8 +25,6 @@ done
 echo "===============================下载插件==============================="
 Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
-Download "https://dl.openwrt.ai/releases/24.10/targets/rockchip/armv8/6.6.87/" \
-"luci-app-turboacc kmod-tcp-bbr kmod-ipt-offload"
 echo "===============================查看插件==============================="
 ls $(pwd)/packages/diy_packages
 echo "======================================================================"
@@ -56,6 +54,7 @@ PACKAGES=""
 PACKAGES="$PACKAGES luci uhttpd curl openssl-util"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
+# PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
 PACKAGES="$PACKAGES luci-app-argon-config"
@@ -68,7 +67,6 @@ PACKAGES="$PACKAGES luci-i18n-ramfree-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-app-unishare"
 PACKAGES="$PACKAGES luci-app-v2ray-server"
-PACKAGES="$PACKAGES luci-app-turboacc"
 # DDNS解析
 PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod"
 # 增加几个必备组件 方便用户安装iStore
@@ -82,9 +80,13 @@ if $INCLUDE_DOCKER; then
 fi
 
 # 构建镜像
+echo "===============================默认插件==============================="
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
+make info | less
+echo "===============================添加插件==============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
 echo "$PACKAGES"
-
+echo "======================================================================"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 
 if [ $? -ne 0 ]; then
