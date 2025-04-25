@@ -91,7 +91,7 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
       
-      - name: Building ${{ env.arch }} ImmortalWrt
+      - name: Building ${{ env.config }} ImmortalWrt
         run: |
           docker run --rm -i \
             --user root \
