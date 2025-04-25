@@ -42,14 +42,14 @@ if [ ! -n "$(uci -q get argon.@global[])" ]; then
 	uci commit argon
 fi
 uci set argon.@global[0].online_wallpaper="none"
-uci set argon.@global[0].mode="normal"
+uci set argon.@global[0].mode="light"
 uci set argon.@global[0].bing_background="0"
-uci set argon.@global[0].transparency_dark="0.2"
-uci set argon.@global[0].dark_primary="#5e72e4"
-uci set argon.@global[0].primary="#483d8b"
+uci set argon.@global[0].primary="#5e72e4"
+uci set argon.@global[0].dark_primary="#483d8b"
+uci set argon.@global[0].blur="1"
 uci set argon.@global[0].blur_dark="1"
 uci set argon.@global[0].transparency="0.2"
-uci set argon.@global[0].blur="1"
+uci set argon.@global[0].transparency_dark="0.2"
 uci commit argon
 
 #==========================DHCP==========================

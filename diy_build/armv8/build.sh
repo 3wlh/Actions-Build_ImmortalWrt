@@ -1,4 +1,8 @@
 #!/bin/bash
+# 添加首次启动时运行的脚本
+[[ -d "$(pwd)/files/etc/uci-defaults" ]] || mkdir -p "$(pwd)/files/etc/uci-defaults"
+mv "$(pwd)/files/*.sh" "$(pwd)/files/etc/uci-defaults/"
+
 # 添加插件
 function Download(){ # 下载函数
 echo "Downloading ${1}"
@@ -31,9 +35,12 @@ echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
-"luci-app-unishare unishare webdav2 luci-app-v2ray-server luci-app-sunpanel sunpanel"
+"luci-app-unishare unishare webdav2 luci-app-v2ray-server"
 Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-app-cifs-mount_1-r12_aarch64_generic.ipk"
 Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-i18n-cifs-mount-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
+Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-app-sunpanel_25.115.34439.90c7318_aarch64_generic.ipk"
+Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-i18n-sunpanel-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
+Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_205106/sunpanel_1.3.1-r5_aarch64_generic_aarch64_generic.ipk"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "==============================镜像信息=============================="
@@ -70,7 +77,7 @@ PACKAGES="$PACKAGES luci-i18n-ramfree-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-app-unishare"
 PACKAGES="$PACKAGES luci-app-v2ray-server"
-PACKAGES="$PACKAGES luci-app-sunpanel"
+PACKAGES="$PACKAGES luci-i18n-sunpanel-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-cifs-mount-zh-cn"
 # DDNS解析
 PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod"
