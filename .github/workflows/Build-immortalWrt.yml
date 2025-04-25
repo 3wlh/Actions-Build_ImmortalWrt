@@ -76,8 +76,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set executable permissions
-        run: chmod +x ${{ github.workspace }}//diy_build/${{ inputs.arch }}/${{ inputs.profile }}/build.sh
+      
         
       - name: Configure environment variables
         run: |
@@ -89,7 +88,10 @@ jobs:
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=\"armv8\" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch==\"x86-64\" >> $GITHUB_ENV
           echo "config=$(echo ${inputs.image} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
-          
+        
+      - name: Set executable permissions
+        run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
+      
       - name: Building ${{ env.arch }} ImmortalWrt
         run: |
           docker run --rm -i \
