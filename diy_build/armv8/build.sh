@@ -25,7 +25,7 @@ done
 echo "===============================下载插件==============================="
 Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
-Download "https://dl.openwrt.ai/releases/24.10/targets/armsr/armv8/6.6.86/" \
+Download "https://dl.openwrt.ai/releases/24.10/targets/rockchip/armv8/6.6.87/" \
 "luci-app-turboacc kmod-tcp-bbr kmod-ipt-offload"
 echo "===============================查看插件==============================="
 ls $(pwd)/packages/diy_packages
