@@ -78,14 +78,14 @@ jobs:
         
       - name: Configure environment variables
         run: |
-          if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
+          if [ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]; then
             echo "profile=\"generic\"" >> $GITHUB_ENV
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
           fi  
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=\"armv8\"" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch==\"x86-64\"" >> $GITHUB_ENV
-          # echo "config=$(echo ${inputs.image} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV 
+          echo "config=$(echo ${inputs.image} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV 
         
       - name: Set executable permissions
         run: |
