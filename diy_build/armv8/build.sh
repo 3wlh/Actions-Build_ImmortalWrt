@@ -54,7 +54,7 @@ PACKAGES=""
 PACKAGES="$PACKAGES luci uhttpd curl openssl-util"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
-# PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
+PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
 PACKAGES="$PACKAGES luci-app-argon-config"
@@ -78,11 +78,11 @@ if $INCLUDE_DOCKER; then
     PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"
     echo "ADD package: luci-i18n-dockerman-zh-cn"
 fi
-
+ 
 # 构建镜像
 echo "===============================默认插件==============================="
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
-make info | less
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Default Packages："
+echo "$(make info | grep "Default Packages:" | sed 's/Default Packages: //')"
 echo "===============================添加插件==============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
 echo "$PACKAGES"
