@@ -32,19 +32,14 @@ while IFS= read -r LINE; do
 done
 }
 echo "==============================下载插件=============================="
+# sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
+# sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
 #Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 #"luci-app-unishare unishare webdav2 luci-app-v2ray-server"
-#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-app-cifs-mount_1-r12_aarch64_generic.ipk"
-#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-i18n-cifs-mount-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
-#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-app-sunpanel_25.115.34439.90c7318_aarch64_generic.ipk"
-#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-i18n-sunpanel-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
-#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_205106/sunpanel_1.3.1-r5_aarch64_generic_aarch64_generic.ipk"
-sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
-sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
-
-
+Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
+"luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "==============================镜像信息=============================="
@@ -66,6 +61,8 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
 # 定义所需安装的包列表
 PACKAGES=""
 PACKAGES="$PACKAGES bash uci luci uhttpd curl openssl-util"
+PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd 
+libustream-mbedtls lsblk luci-base nano resolveip swconfig wget-ssl zram-swap"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
@@ -94,7 +91,9 @@ if $INCLUDE_DOCKER; then
     PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"
     echo "ADD package: luci-i18n-dockerman-zh-cn"
 fi
- 
+# 删除插件
+PACKAGES="$PACKAGES -luci-app-cpufreq"
+
 # 构建镜像
 echo "==============================默认插件=============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Default Packages："
@@ -104,9 +103,6 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:
 echo "$PACKAGES"
 echo "==============================打包image=============================="
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
-
-echo "=========================== 查看目录 ==========================="
-ls $(pwd)/packages
 
 # 构建结果
 echo "==============================构建结果=============================="
