@@ -11,9 +11,14 @@ if [ -f "$SETTINGS_FILE" ]; then
    . "$SETTINGS_FILE"
 fi
 
+#====================设置LAN口IP====================
+uci set network.lan.ipaddr='10.10.10.254'
+uci commit network
+
 #==========================Dropbear==========================
 # 设置所有网口可连接 SSH
 # uci set dropbear.@dropbear[0].Interface=''
+# uci commit dropbear
 
 #==========================Fstab==========================
 # 自动挂载未配置的Swap
