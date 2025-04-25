@@ -1,13 +1,13 @@
 #!/bin/sh
-# 99-custom.sh 就是immortalwrt固件首次启动时运行的脚本 位于固件内的/etc/uci-defaults/99-custom.sh
-# Log file for debugging
+# immortalwrt固件首次启动时运行的脚本 /etc/uci-defaults/99-custom.sh
+# 输出日志文件
 LOGFILE="/tmp/uci-defaults-log.txt"
-echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
+echo "Starting 99-custom.sh at $(date '+%Y-%m-%d %H:%M:%S')" >> $LOGFILE
 
-# 检查配置文件pppoe-settings是否存在 该文件由build.sh动态生成
-SETTINGS_FILE="/etc/config/pppoe-settings"
+# 检查配置文件diy-settings是否存在
+SETTINGS_FILE="/etc/config/diy-settings"
 if [ ! -f "$SETTINGS_FILE" ]; then
-    echo "PPPoE settings file not found. Skipping." >> $LOGFILE
+    echo "settings file not found. Skipping." >> $LOGFILE
 else
    # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
    . "$SETTINGS_FILE"
@@ -42,8 +42,8 @@ uci set argon.@global[0].online_wallpaper="none"
 uci set argon.@global[0].mode="normal"
 uci set argon.@global[0].bing_background="0"
 uci set argon.@global[0].transparency_dark="0.2"
-uci set argon.@global[0].dark_primary="#6666FF"
-uci set argon.@global[0].primary="#6666FF"
+uci set argon.@global[0].dark_primary="#5e72e4"
+uci set argon.@global[0].primary="#483d8b"
 uci set argon.@global[0].blur_dark="1"
 uci set argon.@global[0].transparency="0.2"
 uci set argon.@global[0].blur="1"
@@ -71,20 +71,17 @@ uci commit firewall
 uci del_list network.@device[0].ports="eth1"
 uci add_list network.@device[0].ports="eth2"
 uci set network.wan.device="eth1"
-# 设置ipv6 默认不配置协议
-uci set network.wan6.proto='none'
 # 删除 WAN6 口
 uci -q delete network.wan6
 # 设置拨号协议
 uci set network.wan.proto="pppoe"
-if [ "$enable_pppoe" = "yes" ]; then
+if [ -n "${pppoe_account}" ]; then
    uci set network.wan.username=$pppoe_account
+   echo "PPPoE_Account configuration completed successfully." >> $LOGFILE
+fi
+if [ -n "${pppoe_password}" ]; then
    uci set network.wan.password=$pppoe_password
-   uci set network.wan.peerdns='1'
-   uci set network.wan.auto='1'
-   echo "PPPoE configuration completed successfully." >> $LOGFILE
-else
-   echo "PPPoE is not enabled. Skipping configuration." >> $LOGFILE
+   echo "PPPoE_Password configuration completed successfully." >> $LOGFILE
 fi
 uci commit network
 
@@ -119,7 +116,8 @@ uci commit system
 
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
-NEW_DESCRIPTION="Compiled by wukongdaily"
+NEW_DESCRIPTION="Compiled by 3wlh"
 sed -i "s/DISTRIB_DESCRIPTION='[^']*'/DISTRIB_DESCRIPTION='$NEW_DESCRIPTION'/" "$FILE_PATH"
-
+# 删除配置文件
+rm -f "${SETTINGS_FILE}"
 exit 0
