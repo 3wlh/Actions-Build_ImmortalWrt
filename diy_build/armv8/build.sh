@@ -1,10 +1,12 @@
 #!/bin/bash
 # 添加插件
 function Download(){ # 下载函数
-
+echo "Downloading ${1}"
+curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
+# #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
 }
 
-function Download(){ # 下载函数
+function Segmentation(){ # 分割下载函数
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
 PACKAGES_URL="${1}"
@@ -19,9 +21,8 @@ while IFS= read -r LINE; do
                 continue
             fi
             Download_URL="${PACKAGES_URL}${FILE}"
-            echo "Downloading ${Download_URL}"
+            Download "${Download_URL}"
             curl -# --fail "$Download_URL" -o "$(pwd)/packages/diy_packages/$(basename $Download_URL)"
-            # #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
         fi
     done
 done
@@ -29,14 +30,10 @@ done
 echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
-
-Download "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
+Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server luci-app-sunpanel sunpanel"
-Packages_url="https://github.com/3wlh/Actions-Build_Package/releases/download/2024.10.25_093404/aarch64_generic_luci-i18n-cifs-mount-zh-cn_24.299.05564.9328bd0.ipk"
-curl -# --fail "$Packages_url" -o "$(pwd)/packages/diy_packages/$(basename $Packages_url)"
-Packages_url="https://github.com/3wlh/Actions-Build_Package/releases/download/2024.10.25_093404/aarch64_generic_luci-i18n-cifs-mount-zh-cn_24.299.05564.9328bd0.ipk"
-
-curl -# --fail "https://github.com/3wlh/Actions-Build_Package/releases/download/2024.10.25_093404/aarch64_generic_luci-app-cifs-mount_1-12.ipk" -o "$(pwd)/packages/diy_packages/$(basename $Download_URL)"
+Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-app-cifs-mount_1-r12_aarch64_generic.ipk"
+Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-i18n-cifs-mount-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "==============================镜像信息=============================="
@@ -74,6 +71,7 @@ PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-app-unishare"
 PACKAGES="$PACKAGES luci-app-v2ray-server"
 PACKAGES="$PACKAGES luci-app-sunpanel"
+PACKAGES="$PACKAGES luci-i18n-cifs-mount-zh-cn"
 # DDNS解析
 PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod"
 # 增加几个必备组件 方便用户安装iStore
