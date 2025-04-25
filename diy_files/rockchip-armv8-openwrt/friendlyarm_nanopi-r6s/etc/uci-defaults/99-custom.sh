@@ -11,11 +11,11 @@ if [ -f "$SETTINGS_FILE" ]; then
    . "$SETTINGS_FILE"
 fi
 
-#========dropbear========
+#==========================Dropbear==========================
 # 设置所有网口可连接 SSH
 # uci set dropbear.@dropbear[0].Interface=''
 
-#========Fstab========
+#==========================Fstab==========================
 # 自动挂载未配置的Swap
 uci set fstab.@global[0].anon_swap="0"
 # 自动挂载未配置的磁盘
@@ -26,11 +26,11 @@ uci set fstab.@global[0].auto_swap="0"
 uci set fstab.@global[0].auto_mount="1"
 uci commit fstab
 
-#========TTYD========
+#==========================TTYD==========================
 [[ -f "/etc/config/ttyd" ]] && uci delete ttyd.@ttyd[0].interface
 uci commit ttyd
 
-#========ARGON========
+#==========================ARGON==========================
 if [ ! -n "$(uci -q get argon.@global[])" ]; then
 	echo "" > "/etc/config/argon"
 	uci add argon global
@@ -47,7 +47,7 @@ uci set argon.@global[0].transparency="0.2"
 uci set argon.@global[0].blur="1"
 uci commit argon
 
-#========DHCP========
+#==========================DHCP==========================
 # 禁用 ipv6 DHCP
 # DHCPv6 服务
 uci -q delete dhcp.lan.dhcpv6
@@ -59,12 +59,12 @@ uci -q delete dhcp.lan.ndp
 # uci set dhcp.@dnsmasq[0].filter_aaaa="1"
 uci commit dhcp
 
-#========Firewall========
+#==========================Firewall==========================
 # 默认设置WAN口防火墙打开
 uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
 
-#========Network========
+#==========================Network==========================
 # 更改 eth1 为 WAN 口
 uci del_list network.@device[0].ports="eth1"
 uci add_list network.@device[0].ports="eth2"
@@ -86,7 +86,7 @@ if [ -n "${pppoe_password}" ]; then
 fi
 uci commit network
 
-#========System========
+#==========================System==========================
 # echo ledtrig-netdev > /etc/modules.d/led-for-r6s && ln -s /etc/modules.d/led-for-r6s /etc/modules-boot.d/led-for-r6s && modprobe ledtrig-netdev
 # 网口 LED 循序
 # WAN LED
