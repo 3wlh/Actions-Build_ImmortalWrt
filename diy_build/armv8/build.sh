@@ -34,13 +34,17 @@ done
 echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
-Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
-"luci-app-unishare unishare webdav2 luci-app-v2ray-server"
-Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-app-cifs-mount_1-r12_aarch64_generic.ipk"
-Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-i18n-cifs-mount-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
-Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-app-sunpanel_25.115.34439.90c7318_aarch64_generic.ipk"
-Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-i18n-sunpanel-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
-Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_205106/sunpanel_1.3.1-r5_aarch64_generic_aarch64_generic.ipk"
+#Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
+#"luci-app-unishare unishare webdav2 luci-app-v2ray-server"
+#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-app-cifs-mount_1-r12_aarch64_generic.ipk"
+#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_173458/luci-i18n-cifs-mount-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
+#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-app-sunpanel_25.115.34439.90c7318_aarch64_generic.ipk"
+#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_193659/luci-i18n-sunpanel-zh-cn_25.115.34439.90c7318_aarch64_generic.ipk"
+#Download "https://github.com/3wlh/Actions-Build_Package/releases/download/2025.04.25_205106/sunpanel_1.3.1-r5_aarch64_generic_aarch64_generic.ipk"
+sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
+sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
+
+
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "==============================镜像信息=============================="
