@@ -96,10 +96,10 @@ PACKAGES="$PACKAGES -luci-app-cpufreq"
 
 # 构建镜像
 echo "==============================默认插件=============================="
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Default Packages："
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认插件包："
 echo "$(make info | grep "Default Packages:" | sed 's/Default Packages: //')"
 echo "==============================添加插件=============================="
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加插件包："
 echo "$PACKAGES"
 echo "==============================打包image=============================="
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
