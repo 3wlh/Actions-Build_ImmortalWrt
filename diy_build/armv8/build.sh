@@ -1,7 +1,7 @@
 #!/bin/bash
 # 添加首次启动时运行的脚本
-[[ -d "$(pwd)/files/etc/uci-defaults" ]] || mkdir -p "$(pwd)/files/etc/uci-defaults"
-find "$(pwd)/files/" -type f -name "*.sh"  -exec mv {} "$(pwd)/files/etc/uci-defaults/" \;
+[[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
+find "files" -type f -name "*.sh"  -exec mv {} "files/etc/uci-defaults/" \;
 
 # 添加插件
 function Download(){ # 下载函数
