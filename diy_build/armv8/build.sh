@@ -54,7 +54,7 @@ echo "================================================================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
 # 定义所需安装的包列表
 PACKAGES=""
-PACKAGES="$PACKAGES luci uhttpd curl openssl-util"
+PACKAGES="$PACKAGES bash uci luci uhttpd curl openssl-util"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
@@ -93,6 +93,9 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:
 echo "$PACKAGES"
 echo "==============================打包image=============================="
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
+
+echo "=========================== 查看目录 ==========================="
+ls $(pwd)/packages
 
 # 构建结果
 echo "==============================构建结果=============================="
