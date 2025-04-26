@@ -107,6 +107,17 @@ jobs:
           
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
@@ -137,21 +148,20 @@ jobs:
             sha256sum "$file" > "$file.sha256"
             sha256sum -c "$file.sha256"
           done
-          
           echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
-          name: Build_bin_${{ env.config }}
-          path: ${{ github.workspace }}/bin
+          name: GitHub-Actions_bin-${{ env.config }}
+          path: ${{ github.workspace }}/${{ inputs.image }}/bin
           
       - name: Upload ImmortWrt as release assets
         if: steps.building.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: Actions-Build_${{ env.time }}
+          tag_name: GitHub-Actions_${{ env.time }}
           name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
