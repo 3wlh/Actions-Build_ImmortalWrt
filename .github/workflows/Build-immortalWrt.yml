@@ -70,8 +70,8 @@ on:
 
 env:
   UPLOAD_BIN_DIR: true
-  PATH_CACHE: /tmp/docker-image-cache/${{ inputs.image }}
-  ssh: true
+  PATH_CACHE: /tmp/docker-image-cache
+  ssh: false
 
 jobs:
   Build:
@@ -84,8 +84,12 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.PATH_CACHE }}
-          key: ${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}
+          path: |
+            ${{ env.PATH_CACHE }}/${{ inputs.image }}/image
+            ${{ github.workspace }}/${{ inputs.image }}/dl
+          key: |
+            ${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image
+            ${{ github.workspace }}/${{ inputs.image }}/dl
         
       - name: Configure environment variables
         run: |
@@ -121,7 +125,7 @@ jobs:
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
           docker load --input \
-          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
       
       - name: Pull base images if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
@@ -133,7 +137,7 @@ jobs:
         run: |
           mkdir -p ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}
           docker save --output \
-          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           
       - name: SSH connection to Actions
@@ -146,6 +150,7 @@ jobs:
           # exit 1
           docker run --rm -i \
             --user root \
+            -v "${{ github.workspace }}/${{ inputs.image }}/dl:/home/build/immortalwrt/dl" \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
             -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
