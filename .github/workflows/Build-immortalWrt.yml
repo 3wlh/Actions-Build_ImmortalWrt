@@ -86,7 +86,7 @@ jobs:
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
           fi
-          [[ $inputs.docker ]] && echo "docker=-Docker" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
