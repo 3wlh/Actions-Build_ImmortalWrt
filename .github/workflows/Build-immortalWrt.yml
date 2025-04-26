@@ -78,15 +78,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
-      - name: Setup Cache
-        uses: actions/cache@main
-        with:
-          path: |
-            ${{ github.workspace }}/${{ inputs.image }}/bin
-          key: ${{ github.workspace }}/${{ inputs.image }}/bin
-          restore-keys: |
-            ${{ github.workspace }}/${{ inputs.image }}/bin
-           
       - name: Configure environment variables
         run: |
           sudo timedatectl set-timezone "Asia/Shanghai"
