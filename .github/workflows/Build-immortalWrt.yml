@@ -93,8 +93,7 @@ jobs:
           
       - name: Check the Docker
         if: inputs.docker == 'true'
-        env: 
-          docker="-Docker"
+        env: docker: -Docker
         
       - name: Set executable permissions
         run: |
