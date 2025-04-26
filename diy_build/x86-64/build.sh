@@ -11,8 +11,12 @@ fi
 
 function Download(){ # 下载函数
 echo "Downloading ${1}"
-curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
-# #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
+if [[ -f "$(pwd)/packages/diy_packages/$(basename ${1})" ]]; then
+    echo"######################################################################## 100.0%"
+else
+    curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
+    # #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
+fi
 }
 
 function Segmentation(){ # 分割下载函数
