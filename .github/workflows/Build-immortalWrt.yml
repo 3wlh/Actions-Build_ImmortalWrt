@@ -80,9 +80,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: image Cache
-        id: image_cache
-        uses: actions/cache@mian
+      - name: Setup Cache
+        id: cache
+        uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
           key: 
