@@ -85,17 +85,21 @@ jobs:
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
           fi
-          [[ "${{ inputs.docker }}" == "true" ]] && echo "docker55=-Docker" >> $GITHUB_ENV
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
           
-      - name: Check the Docker
-        if: inputs.docker == 'true'
-        run: echo "docker=-Docker" >> $GITHUB_ENV
-
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
+     
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+          cache-from: immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
         
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
@@ -128,7 +132,7 @@ jobs:
           done
           echo "status=success" >> $GITHUB_OUTPUT
           
-      - name: Create info
+      - name: Create Edit info
         run: |
           echo "## 编译时间：$()" > info.md
           echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
@@ -137,9 +141,7 @@ jobs:
           echo "* 固件地址 \`10.10.10.254\`" >> info.md
           echo "* 用户名 \`root\` 密码：无" >> info.md
           echo "* 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
-          if [ "${{ inputs.docker }}" == "yes" ]; then
-            echo "* 默认带docker" >> info.md
-          fi
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "* 添加`docker`版本" >> info.md
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
