@@ -80,20 +80,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: image Cache
+      - name: Setup Cache
         uses: actions/cache@main
         with:
-          path: ${{ env.PATH_CACHE }}/image
-          key: ${{ inputs.image }}/image
+          path: |
+            ${{ env.PATH_CACHE }}/image
+            ${{ env.PATH_CACHE }}/package
+          key: ${{ inputs.image }}/Cache
           restore-keys: |
              ${{ env.PATH_CACHE }}/image/${{ inputs.image }}/image
-             
-      - name: package Cache
-        uses: actions/cache@main
-        with:
-          path: ${{ env.PATH_CACHE }}/package
-          key: ${{ inputs.image }}/package
-          restore-keys: |
              ${{ env.PATH_CACHE }}/package/${{ inputs.image }}/package
           
       - name: Configure environment variables
