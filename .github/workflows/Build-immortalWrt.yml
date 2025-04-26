@@ -89,7 +89,8 @@ jobs:
            
       - name: Configure environment variables
         run: |
-          echo "time=$(date +"%Y.%m.%d-%H%M)" >> $GITHUB_ENV
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          echo "time=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           if [ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]; then
             echo "profile=generic" >> $GITHUB_ENV
           else
