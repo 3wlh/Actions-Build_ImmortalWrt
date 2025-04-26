@@ -82,17 +82,12 @@ jobs:
         
       - name: image Cache
         id: image_cache
-        uses: actions/cache@v3
+        uses: actions/cache@mian
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ inputs.image }}/image
-       
-      - name: Package Cache
-        id: package_cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.PATH_CACHE }}
-          key: ${{ inputs.image }}/package
+          key: 
+            ${{ inputs.image }}/image
+            ${{ inputs.image }}/package
           
       - name: Configure environment variables
         run: |
