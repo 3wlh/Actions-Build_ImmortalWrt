@@ -85,11 +85,12 @@ jobs:
             echo "profile=generic" >> $GITHUB_ENV
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
-          fi  
+          fi
+          [[ ${{ inputs.docker }} ]] && echo "docker=-Docker" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
-          echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV 
-        
+          echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
+          
       - name: Set executable permissions
         run: |
           chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
@@ -97,6 +98,7 @@ jobs:
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
         run: |
+          exit 1
           docker run --rm -i \
             --user root \
             -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
@@ -126,12 +128,15 @@ jobs:
           
       - name: Create info
         run: |
-          echo "[![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" > info.md
-          echo "#### 固件地址 \`10.10.10.254\`" >> info.md
-          echo "用户名 \`root\` 密码：无" >> info.md
-          echo "#### 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
+          echo "## 编译时间：$()" > info.md
+          echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
+          echo "## 固件信息：" >> info.md
+          echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
+          echo "* 固件地址 \`10.10.10.254\`" >> info.md
+          echo "* 用户名 \`root\` 密码：无" >> info.md
+          echo "* 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
           if [ "${{ inputs.docker }}" == "yes" ]; then
-            echo "#### 默认带docker" >> info.md
+            echo "* 默认带docker" >> info.md
           fi
           
       - name: Upload bin directory
@@ -146,7 +151,7 @@ jobs:
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: Actions-Build
-          name: ImmortWrt-${{ env.config }}-${{ env.profile }}-${{ inputs.version }}
+          name: ImmortWrt-${{ env.config }}-${{ env.profile }}-
           body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
