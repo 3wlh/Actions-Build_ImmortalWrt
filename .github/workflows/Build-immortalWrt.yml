@@ -78,8 +78,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
+      - name: Setup Cache
+        uses: actions/cache@main
+        with:
+          path: |
+            ${{ github.workspace }}/bin
+          key: ${{ github.workspace }}/bin
+          restore-keys: |
+            ${{ github.workspace }}/bin
+           
       - name: Configure environment variables
         run: |
+          echo "time=$(date +"%Y.%m.%d-%H%M)" >> $GITHUB_ENV
           if [ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]; then
             echo "profile=generic" >> $GITHUB_ENV
           else
@@ -89,17 +99,20 @@ jobs:
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
+             
+      - name: Create Edit info
+        run: |
+          echo "## 编译时间：\`${{ env.time }}\`" > info.md
+          echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
+          echo "## 固件信息：" >> info.md
+          echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
+          echo "* 固件地址 \`10.10.10.254\`" >> info.md
+          echo "* 用户名 \`root\` 密码：无" >> info.md
+          echo "* 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "* 添加`docker`版本" >> info.md
           
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
-     
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
-          cache-from: immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
         
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
@@ -129,18 +142,8 @@ jobs:
             sha256sum "$file" > "$file.sha256"
             sha256sum -c "$file.sha256"
           done
-          echo "status=success" >> $GITHUB_OUTPUT
           
-      - name: Create Edit info
-        run: |
-          echo "## 编译时间：$()" > info.md
-          echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
-          echo "## 固件信息：" >> info.md
-          echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
-          echo "* 固件地址 \`10.10.10.254\`" >> info.md
-          echo "* 用户名 \`root\` 密码：无" >> info.md
-          echo "* 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
-          [[ "${{ inputs.docker }}" == "true" ]] && echo "* 添加`docker`版本" >> info.md
+          echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
@@ -148,12 +151,12 @@ jobs:
         with:
           name: Build_bin_${{ env.config }}
           path: ${{ github.workspace }}/bin
-        
+          
       - name: Upload ImmortWrt as release assets
         if: steps.building.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: Actions-Build
+          tag_name: Actions-Build—${{ env.time }}
           name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
