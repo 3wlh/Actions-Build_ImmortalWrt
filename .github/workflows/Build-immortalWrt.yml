@@ -71,6 +71,7 @@ on:
 env:
   UPLOAD_BIN_DIR: true
   PATH_CACHE: /tmp/docker-image-cache/${{ inputs.image }}
+  ssh: true
 
 jobs:
   Build:
@@ -134,7 +135,11 @@ jobs:
           docker save --output \
           ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
-        
+          
+      - name: SSH connection to Actions
+        if: (env.ssh == true) || contains(github.event.action, 'ssh')
+        uses: mxschmitt/action-tmate@master
+      
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
         run: |
