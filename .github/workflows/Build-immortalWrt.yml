@@ -86,11 +86,7 @@ jobs:
           path: ${{ env.PATH_CACHE }}
           key: ${{ inputs.image }}/image
           
-      - name: Setup Cache
-        uses: actions/cache@main
-        with:
-          path: ${{ env.PATH_CACHE }}
-          key: ${{ inputs.image }}/package
+      
           
       - name: Configure environment variables
         run: |
@@ -145,7 +141,13 @@ jobs:
       - name: SSH connection to Actions
         if: env.ssh == 'true'
         uses: mxschmitt/action-tmate@master
-      
+        
+      - name: Setup Cache
+        uses: actions/cache@main
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ inputs.image }}/package
+          
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
         run: |
