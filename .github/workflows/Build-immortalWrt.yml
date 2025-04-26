@@ -86,8 +86,6 @@ jobs:
           path: ${{ env.PATH_CACHE }}
           key: ${{ inputs.image }}/image
           
-      
-          
       - name: Configure environment variables
         run: |
           #${{ steps.imagetag.outputs.hash }}
