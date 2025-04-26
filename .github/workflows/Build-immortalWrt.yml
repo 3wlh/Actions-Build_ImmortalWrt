@@ -91,7 +91,7 @@ jobs:
         run: |
           sudo timedatectl set-timezone "Asia/Shanghai"
           echo "time=$(date "+%Y.%m.%d_%H%M%S")" >> $GITHUB_ENV
-          if [ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]; then
+          if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
             echo "profile=generic" >> $GITHUB_ENV
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
