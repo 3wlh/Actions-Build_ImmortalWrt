@@ -113,6 +113,7 @@ echo "=========================== 编译添加插件 ===========================
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 编译添加插件："
 echo "$PACKAGES"
 echo "============================ 编辑Config ============================"
+Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
 Replace "CONFIG_TARGET_EXT4_JOURNAL"
 Replace "CONFIG_TARGET_KERNEL_PARTSIZE" "32"
 Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"

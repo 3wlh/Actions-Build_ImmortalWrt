@@ -82,10 +82,10 @@ jobs:
         uses: actions/cache@main
         with:
           path: |
-            ${{ github.workspace }}/bin
+            ${{ github.workspace }}/${{ inputs.image }}/bin
           key: ${{ github.workspace }}/bin
           restore-keys: |
-            ${{ github.workspace }}/bin
+            ${{ github.workspace }}/${{ inputs.image }}/bin
            
       - name: Configure environment variables
         run: |
@@ -123,7 +123,7 @@ jobs:
           # exit 1
           docker run --rm -i \
             --user root \
-            -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
+            -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
             -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
             -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:/home/build/immortalwrt/files" \
@@ -139,9 +139,9 @@ jobs:
       - name: Generate Firmware SHA-256
         id: image
         run: |
-          find ${{ github.workspace }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
-          cp ${{ github.workspace }}/bin/*.config ${{ github.workspace }}
-          # cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
+          find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
+          cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.config ${{ github.workspace }}
+          # cp ${{ github.workspace }}/${{ inputs.image }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
           for file in *.img.gz; do
             sha256sum "$file" > "$file.sha256"
             sha256sum -c "$file.sha256"
@@ -164,9 +164,9 @@ jobs:
           name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
-            ${{ github.workspace }}/*.img.gz
-            ${{ github.workspace }}/*.config
-            ${{ github.workspace }}/*.sha256
+            ${{ github.workspace }}/${{ inputs.image }}/*.img.gz
+            ${{ github.workspace }}/${{ inputs.image }}/*.config
+            ${{ github.workspace }}/${{ inputs.image }}/*.sha256
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
