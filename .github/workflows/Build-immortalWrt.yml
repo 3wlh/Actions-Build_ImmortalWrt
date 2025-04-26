@@ -69,7 +69,7 @@ on:
         required: false
 
 env:
-  PATH_CACHE: /tmp/cache
+  PATH_CACHE: /tmp/.cache
   UPLOAD_BIN_DIR: false
   ssh: false
 
