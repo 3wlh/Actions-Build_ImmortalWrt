@@ -94,7 +94,7 @@ jobs:
           path: ${{ env.PATH_CACHE }}/package
           key: ${{ inputs.image }}/package
           restore-keys: |
-             ${{ env.PATH_CACHE }}/package${{ inputs.image }}/package
+             ${{ env.PATH_CACHE }}/package/${{ inputs.image }}/package
           
       - name: Configure environment variables
         run: |
@@ -156,7 +156,7 @@ jobs:
           # exit 1
           docker run --rm -i \
             --user root \
-            -v "${{ env.PATH_CACHE }}/package${{ inputs.image }}/package:/home/build/immortalwrt/dl" \
+            -v "${{ env.PATH_CACHE }}/package/${{ inputs.image }}/package:/home/build/immortalwrt/dl" \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
             -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
