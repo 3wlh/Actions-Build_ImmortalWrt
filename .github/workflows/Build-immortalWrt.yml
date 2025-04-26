@@ -70,6 +70,7 @@ on:
 
 env:
   UPLOAD_BIN_DIR: false
+  PATH_CACHE: /tmp/docker-image-cache/${{ inputs.image }}
 
 jobs:
   Build:
@@ -77,6 +78,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
+      - name: Enable Cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}
         
       - name: Configure environment variables
         run: |
@@ -108,16 +116,23 @@ jobs:
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
       
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Load cached Docker images if any
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: |
+          docker load --input \
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+      
+      - name: Pull base images if no-cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+        
+      - name: Save/export built images to cache dir if no-cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker save --output \
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
+          immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
         
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
