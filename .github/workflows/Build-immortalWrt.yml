@@ -90,7 +90,7 @@ jobs:
       - name: Configure environment variables
         run: |
           sudo timedatectl set-timezone "Asia/Shanghai"
-          echo "time=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+          echo "time=$(date "+%Y.%m.%d_%H%M%S")" >> $GITHUB_ENV
           if [ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]; then
             echo "profile=generic" >> $GITHUB_ENV
           else
@@ -109,8 +109,8 @@ jobs:
           echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
           echo "* 固件地址 \`10.10.10.254\`" >> info.md
           echo "* 用户名 \`root\` 密码：无" >> info.md
-          echo "* 默认软件包大小 ${{ inputs.rootfs_partsize }}MB" >> info.md
-          [[ "${{ inputs.docker }}" == "true" ]] && echo "* 添加`docker`版本" >> info.md
+          echo "* 默认软件包大小 \`${{ inputs.rootfs_partsize }}MB\`" >> info.md
+          # [[ "${{ inputs.docker }}" == "true" ]] && echo "* 添加`docker`版本" >> info.md
           
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
