@@ -69,7 +69,7 @@ on:
         required: false
 
 env:
-  PATH_CACHE: /tmp/.cache/${{ inputs.image }}
+  PATH_CACHE: /tmp/.cache
   UPLOAD_BIN_DIR: false
   ssh: false
 
@@ -81,12 +81,15 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Setup Cache
+        id: cache
         uses: actions/cache@main
         with:
           path: |
-            ${{ env.PATH_CACHE }}/image
-            ${{ env.PATH_CACHE }}/package
-          key: ${{ steps.imagetag.outputs.hash }}
+            ${{ env.PATH_CACHE }}
+            ${{ github.workspace }}/package
+          key: |
+            ${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image
+            ${{ github.workspace }}/${{ inputs.image }}/package
           
       - name: Configure environment variables
         run: |
@@ -123,7 +126,7 @@ jobs:
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
           docker load --input \
-          ${{ env.PATH_CACHE }}/image/${{ steps.imagetag.outputs.hash }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+          ${{ env.PATH_CACHE }}${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
       
       - name: Pull base images if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
@@ -133,9 +136,9 @@ jobs:
       - name: Save/export built images to cache dir if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          mkdir -p ${{ env.PATH_CACHE }}/image/${{ steps.imagetag.outputs.hash }}
+          mkdir -p ${{ env.PATH_CACHE }}${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image
           docker save --output \
-          ${{ env.PATH_CACHE }}/image/${{ steps.imagetag.outputs.hash }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           
       - name: SSH connection to Actions
@@ -148,7 +151,7 @@ jobs:
           # exit 1
           docker run --rm -i \
             --user root \
-            -v "${{ env.PATH_CACHE }}/package/${{ steps.imagetag.outputs.hash }}:/home/build/immortalwrt/dl" \
+            -v "${{ github.workspace }}/${{ inputs.image }}/package:/home/build/immortalwrt/dl" \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
             -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
