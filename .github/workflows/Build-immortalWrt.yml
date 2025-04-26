@@ -70,7 +70,7 @@ on:
 
 env:
   UPLOAD_BIN_DIR: true
-  PATH_CACHE: ~/.cache
+  PATH_CACHE: /tmp/.cache
   ssh: false
 
 jobs:
@@ -119,7 +119,7 @@ jobs:
       - name: Set executable permissions
         run: |
           chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
-          test -d "${{ env.PATH_CACHE }}/${{ inputs.image }}/package" || mkdir -p "${{ env.PATH_CACHE }}/${{ inputs.image }}/package"
+          #test -d "${{ env.PATH_CACHE }}/${{ inputs.image }}/package" || mkdir -p "${{ env.PATH_CACHE }}/${{ inputs.image }}/package"
       
       - name: Load cached Docker images if any
         if: steps.cache.outputs.cache-hit == 'true'
