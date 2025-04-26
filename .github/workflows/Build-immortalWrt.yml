@@ -85,11 +85,11 @@ jobs:
         uses: actions/cache@main
         with:
           path: |
-            ${{ env.PATH_CACHE }}/image
-            ${{ env.PATH_CACHE }}/package
+            ${{ env.PATH_CACHE }}
+            
           key: |
-            ${{ inputs.image }}/image
-            ${{ inputs.image }}/package
+            /${{ inputs.image }}/image
+            /${{ inputs.image }}/package
         
       - name: Configure environment variables
         run: |
