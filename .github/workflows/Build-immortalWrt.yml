@@ -151,7 +151,7 @@ jobs:
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: Actions-Build
-          name: ImmortWrt-${{ env.config }}-${{ env.profile }}-
+          name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
