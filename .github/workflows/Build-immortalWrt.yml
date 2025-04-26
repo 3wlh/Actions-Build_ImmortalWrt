@@ -49,7 +49,7 @@ on:
         description: |
           是否编译 Docker 插件
         required: true
-        default:
+        default: false
         type: boolean
         
       enable_pppoe:
@@ -110,7 +110,7 @@ jobs:
           echo "* 固件地址 \`10.10.10.254\`" >> info.md
           echo "* 用户名 \`root\` 密码：无" >> info.md
           echo "* 默认软件包大小 \`${{ inputs.rootfs_partsize }}MB\`" >> info.md
-          [[ "${{ inputs.docker }}" ]] && echo "* 添加`docker`版本" >> info.md
+          [[ "${{ inputs.docker }}"=="false" ]] || echo "* 添加`docker`版本" >> info.md
           
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
@@ -118,6 +118,7 @@ jobs:
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
         run: |
+          exit 1
           docker run --rm -i \
             --user root \
             -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \
