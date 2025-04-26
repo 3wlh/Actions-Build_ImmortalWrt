@@ -93,6 +93,8 @@ fi
 # 删除插件
 PACKAGES="$PACKAGES -luci-app-cpufreq"
 
+# 生成配置文件
+make defconfig
 # 构建镜像
 echo "==============================默认插件=============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认插件包："
