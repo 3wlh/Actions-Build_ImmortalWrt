@@ -137,7 +137,7 @@ jobs:
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           
       - name: SSH connection to Actions
-        if: (env.ssh == true) || contains(github.event.action, 'ssh')
+        if: env.ssh == 'true'
         uses: mxschmitt/action-tmate@master
       
       - name: Building ${{ env.config }} ImmortalWrt
