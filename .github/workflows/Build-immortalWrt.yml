@@ -81,11 +81,15 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Setup Cache
-        id: cache
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
           key: ${{ inputs.image }}/image
+          
+      - name: Setup Cache
+        uses: actions/cache@main
+        with:
+          path: ${{ env.PATH_CACHE }}
           key: ${{ inputs.image }}/package
           
       - name: Configure environment variables
