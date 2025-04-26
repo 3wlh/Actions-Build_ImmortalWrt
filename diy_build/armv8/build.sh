@@ -59,15 +59,16 @@ echo "================================================================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
 # 定义所需安装的包列表
 PACKAGES=""
-PACKAGES="$PACKAGES bash uci luci uhttpd luci-base curl openssl-util"
+PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util"
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
+# 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
+PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
-PACKAGES="$PACKAGES luci-app-argon-config"
 PACKAGES="$PACKAGES luci-i18n-argon-config-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-passwall-zh-cn"
 # PACKAGES="$PACKAGES luci-app-openclash"
@@ -87,7 +88,7 @@ PACKAGES="$PACKAGES script-utils"
 # PACKAGES="$PACKAGES luci-i18n-samba4-zh-cn"
 # 添加Docker插件
 if $INCLUDE_DOCKER; then
-    PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"
+    PACKAGES="$PACKAGES docker-compose luci-i18n-dockerman-zh-cn"
     echo "ADD package: luci-i18n-dockerman-zh-cn"
 fi
 # 删除插件
