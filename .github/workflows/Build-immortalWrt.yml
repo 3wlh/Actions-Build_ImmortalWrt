@@ -110,7 +110,9 @@ jobs:
           echo "* 固件地址 \`10.10.10.254\`" >> info.md
           echo "* 用户名 \`root\` 密码：无" >> info.md
           echo "* 默认软件包大小 \`${{ inputs.rootfs_partsize }}MB\`" >> info.md
-          [[ -n "${{ env.docker }}" ]] && echo "* 添加\`docker\`版本" >> info.md
+          if [[ "${{ inputs.docker }}" == "true" ]]; then
+            echo "* 添加\`docker\`版本" >> info.md
+          fi
           
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
