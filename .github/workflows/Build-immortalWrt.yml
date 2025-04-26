@@ -80,23 +80,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Mkdir Path
-        run: |
-          sudo mkdir -p /image && sudo chmod 777 /image
-          sudo mkdir -p /package && sudo chmod 777 /package
-        
-      - name: Enable Cache
-        id: cache
+      - name: image Cache
+        id: image_cache
         uses: actions/cache@v3
         with:
           path: ${{ env.PATH_CACHE }}
-          key: |
-            ${{ steps.imagetag.outputs.hash }}
-            ${{ inputs.image }}/image
-            ${{ inputs.image }}/package
-        
+          key: ${{ inputs.image }}/image
+       
+      - name: Package Cache
+        id: package_cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ inputs.image }}/package
+          
       - name: Configure environment variables
         run: |
+          #${{ steps.imagetag.outputs.hash }}
           sudo timedatectl set-timezone "Asia/Shanghai"
           echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
           if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
