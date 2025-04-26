@@ -81,7 +81,7 @@ jobs:
       - name: Configure environment variables
         run: |
           sudo timedatectl set-timezone "Asia/Shanghai"
-          echo "time=$(date "+%Y.%m.%d_%H%M%S")" >> $GITHUB_ENV
+          echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
           if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
             echo "profile=generic" >> $GITHUB_ENV
           else
@@ -151,7 +151,7 @@ jobs:
         if: steps.building.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: Actions-Build—${{ env.time }}
+          tag_name: Actions-Build_${{ env.time }}
           name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
