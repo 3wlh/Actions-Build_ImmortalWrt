@@ -80,15 +80,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
+      - name: Mkdir Path
+        run: |
+          sudo mkdir -p /image && sudo chmod 777 /image
+          sudo mkdir -p /package && sudo chmod 777 /package
+        
       - name: Enable Cache
         id: cache
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.PATH_CACHE }}
+            /image
+            /package
           key: |
-            ${{ env.PATH_CACHE }}/${{ inputs.image }}/image
-            ${{ env.PATH_CACHE }}/${{ inputs.image }}/package
+            ${{ inputs.image }}/image
+            ${{ inputs.image }}/package
         
       - name: Configure environment variables
         run: |
@@ -124,7 +130,7 @@ jobs:
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
           docker load --input \
-          ${{ env.PATH_CACHE }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+          /image/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
       
       - name: Pull base images if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
@@ -134,9 +140,9 @@ jobs:
       - name: Save/export built images to cache dir if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          mkdir -p ${{ env.PATH_CACHE }}/${{ inputs.image }}/image
+          mkdir -p /image/${{ inputs.image }}/image
           docker save --output \
-          ${{ env.PATH_CACHE }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
+          /image/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           
       - name: SSH connection to Actions
@@ -149,7 +155,7 @@ jobs:
           # exit 1
           docker run --rm -i \
             --user root \
-            -v "${{ env.PATH_CACHE }}/${{ inputs.image }}/package:/home/build/immortalwrt/dl" \
+            -v "/package/${{ inputs.image }}/package:/home/build/immortalwrt/dl" \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
             -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
