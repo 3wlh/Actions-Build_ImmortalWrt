@@ -83,7 +83,7 @@ jobs:
         with:
           path: |
             ${{ github.workspace }}/${{ inputs.image }}/bin
-          key: ${{ github.workspace }}/bin
+          key: ${{ github.workspace }}/${{ inputs.image }}/bin
           restore-keys: |
             ${{ github.workspace }}/${{ inputs.image }}/bin
            
@@ -164,9 +164,9 @@ jobs:
           name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
-            ${{ github.workspace }}/${{ inputs.image }}/*.img.gz
-            ${{ github.workspace }}/${{ inputs.image }}/*.config
-            ${{ github.workspace }}/${{ inputs.image }}/*.sha256
+            ${{ github.workspace }}/*.img.gz
+            ${{ github.workspace }}/*.config
+            ${{ github.workspace }}/*.sha256
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
