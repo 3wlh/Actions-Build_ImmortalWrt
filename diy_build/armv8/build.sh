@@ -1,8 +1,14 @@
 #!/bin/bash
-# 添加首次启动时运行的脚本
-[[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
-find "$(pwd)/files/" -maxdepth 1 -type f -name "*" -exec mv {} "$(pwd)/files/etc/uci-defaults/" \;
-# 添加插件
+#################### 函数 ####################
+function Replace(){ # 修改函数
+[[ -f "$(pwd)/.config" ]] || return
+if [[ -n "${2}" ]]; then
+	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
+else
+	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
+fi
+}
+
 function Download(){ # 下载函数
 echo "Downloading ${1}"
 curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
@@ -30,6 +36,12 @@ while IFS= read -r LINE; do
     done
 done
 }
+###################################################################
+
+#========== 添加首次启动时运行的脚本 ==========#
+[[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
+find "$(pwd)/files/" -maxdepth 1 -type f -name "*" -exec mv {} "$(pwd)/files/etc/uci-defaults/" \;
+
 echo "==============================下载插件=============================="
 # sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
 # sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
@@ -41,23 +53,22 @@ Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
-echo "==============================镜像信息=============================="
+echo "============================= 镜像信息 ============================="
 echo "路由器型号: $PROFILE"
 echo "固件大小: $ROOTFS_PARTSIZE"
-
-# 创建自定义配置文件
+#========== 创建自定义配置文件 ==========# 
 mkdir -p  /home/build/immortalwrt/files/etc/config
 cat << EOF > /home/build/immortalwrt/files/etc/config/diy-settings
 enable_pppoe=${ENABLE_PPPOE}
 pppoe_account=${PPPOE_ACCOUNT}
 pppoe_password=${PPPOE_PASSWORD}
 EOF
-echo "==========================查看自定义配置=========================="
+echo "========================= 查看自定义配置 ========================="
 cat /home/build/immortalwrt/files/etc/config/diy-settings
 echo "================================================================="
-# 输出调试信息
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
-# 定义所需安装的包列表
+#=============== 开始构建镜像 ===============#
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
+#========== 定义所需安装的包列表 ==========#
 PACKAGES=""
 PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util"
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
@@ -89,29 +100,30 @@ PACKAGES="$PACKAGES script-utils"
 # 添加Docker插件
 if $INCLUDE_DOCKER; then
     PACKAGES="$PACKAGES docker-compose luci-i18n-dockerman-zh-cn"
-    echo "ADD package: luci-i18n-dockerman-zh-cn"
+    echo "添加Package: luci-i18n-dockerman-zh-cn"
 fi
-# 删除插件
+#========== 删除插件包 ==========#
 PACKAGES="$PACKAGES -luci-app-cpufreq"
 
-# 生成配置文件
-make defconfig
-# 构建镜像
-echo "==============================默认插件=============================="
+#=============== 开始打包镜像 ===============#
+echo "============================= 默认插件 ============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认插件包："
 echo "$(make info | grep "Default Packages:" | sed 's/Default Packages: //')"
-echo "==============================添加插件=============================="
-echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加插件包："
+echo "=========================== 编译添加插件 ==========================="
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 编译添加插件："
 echo "$PACKAGES"
-echo "==============================打包image=============================="
+echo "============================ 编辑Config ============================"
+Replace "CONFIG_TARGET_EXT4_JOURNAL"
+Replace "CONFIG_TARGET_KERNEL_PARTSIZE" "32"
+Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"
+echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 
-# 构建结果
-echo "==============================构建结果=============================="
+echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Error: Build failed!"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
     exit 1
 fi
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Build completed successfully."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
