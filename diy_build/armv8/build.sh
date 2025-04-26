@@ -103,6 +103,7 @@ echo "==============================添加插件=============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加插件包："
 echo "$PACKAGES"
 echo "==============================打包image=============================="
+cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 
 # 构建结果

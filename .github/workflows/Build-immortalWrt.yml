@@ -68,6 +68,9 @@ on:
           是否添加 宽带密码? (可留空)
         required: false
 
+env:
+  UPLOAD_BIN_DIR: false
+
 jobs:
   Build:
     runs-on: ubuntu-22.04
@@ -92,6 +95,7 @@ jobs:
           chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
       
       - name: Building ${{ env.config }} ImmortalWrt
+        id: building
         run: |
           docker run --rm -i \
             --user root \
@@ -106,15 +110,19 @@ jobs:
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/build.sh
+          echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Generate Firmware SHA-256
+        id: image
         run: |
           find ${{ github.workspace }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
+          cp ${{ github.workspace }}/bin/*.config ${{ github.workspace }}
           # cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
           for file in *.img.gz; do
             sha256sum "$file" > "$file.sha256"
             sha256sum -c "$file.sha256"
           done
+          echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Create info
         run: |
@@ -128,12 +136,13 @@ jobs:
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
-        if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: Build_bin_${{ env.config }}
           path: ${{ github.workspace }}/bin
         
       - name: Upload ImmortWrt as release assets
+        if: steps.building.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: Actions-Build
@@ -141,6 +150,7 @@ jobs:
           body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
+            ${{ github.workspace }}/*.config
             ${{ github.workspace }}/*.sha256
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
