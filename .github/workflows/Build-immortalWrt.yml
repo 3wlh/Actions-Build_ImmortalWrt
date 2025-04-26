@@ -123,7 +123,7 @@ jobs:
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
           docker load --input \
-          ${{ env.PATH_CACHE }}/image/${{ ${{ steps.imagetag.outputs.hash }} }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+          ${{ env.PATH_CACHE }}/image/${{ steps.imagetag.outputs.hash }}/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
       
       - name: Pull base images if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
