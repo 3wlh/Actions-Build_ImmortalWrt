@@ -86,11 +86,15 @@ jobs:
           else
             echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
           fi
-          [[ "${{ inputs.image }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "docker55=-Docker" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
           
+      - name: Check the Docker
+        if: inputs.docker == 'true'
+        env: docker="-Docker"
+        
       - name: Set executable permissions
         run: |
           chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
