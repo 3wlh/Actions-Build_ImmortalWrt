@@ -69,7 +69,7 @@ on:
         required: false
 
 env:
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   PATH_CACHE: /tmp/docker-image-cache/${{ inputs.image }}
 
 jobs:
