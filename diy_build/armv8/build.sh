@@ -16,7 +16,6 @@ curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
 }
 
 function Segmentation(){ # 分割下载函数
-[[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 PACKAGES_URL="${1}"
 PACKAGES_NAME=(${2})
 wget -qO- "${PACKAGES_URL}" | \
@@ -42,12 +41,14 @@ done
 find "$(pwd)/files/" -maxdepth 1 -type f -name "*" -exec mv {} "$(pwd)/files/etc/uci-defaults/" \;
 
 echo "==============================下载插件=============================="
-# sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
-# sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
-#Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
-#"luci-app-unishare unishare webdav2 luci-app-v2ray-server"
+
+# sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
+# sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
+
+# Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
+# "luci-app-unishare unishare webdav2 luci-app-v2ray-server"
 Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
