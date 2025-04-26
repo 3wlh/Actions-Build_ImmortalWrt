@@ -86,10 +86,9 @@ jobs:
           path: |
             ${{ env.PATH_CACHE }}/image
             ${{ env.PATH_CACHE }}/package
-          key: ${{ inputs.image }}/Cache
-          restore-keys: |
-             ${{ env.PATH_CACHE }}/image/${{ inputs.image }}/image
-             ${{ env.PATH_CACHE }}/package/${{ inputs.image }}/package
+          key: |
+            ${{ inputs.image }}/image
+            ${{ inputs.image }}/package
           
       - name: Configure environment variables
         run: |
