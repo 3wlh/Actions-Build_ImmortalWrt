@@ -92,13 +92,11 @@ jobs:
           
       - name: Check the Docker
         if: inputs.docker == 'true'
-        env:
-          docker: -Docker
-        
+        run: echo "docker=-Docker" >> $GITHUB_ENV
+
       - name: Set executable permissions
-        run: |
-          chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
-      
+        run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
+        
       - name: Building ${{ env.config }} ImmortalWrt
         id: building
         run: |
