@@ -52,6 +52,10 @@ uci set argon.@global[0].transparency_dark="0.2"
 uci commit argon
 
 #==========================DHCP==========================
+# 强制此接口DHCP
+uci set dhcp.lan.force='1'
+# 删除 DNS重定向
+uci -q delete dhcp.@dnsmasq[0].dns_redirect
 # 禁用 ipv6 DHCP
 # DHCPv6 服务
 uci -q delete dhcp.lan.dhcpv6
