@@ -135,7 +135,7 @@ jobs:
       - name: Save/export built images to cache dir if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          mkdir -p ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}
+          mkdir -p ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image
           docker save --output \
           ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
