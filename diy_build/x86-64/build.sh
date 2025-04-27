@@ -1,11 +1,12 @@
 #!/bin/bash
 echo "==============================下载脚本=============================="
-curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
-curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
-curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
-curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
-find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
+url="https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh"
+curl -# --fail "${url}/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
+curl -# --fail "${url}//Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
+curl -# --fail "${url}//Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
+curl -# --fail "${url}//Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
 
+find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
