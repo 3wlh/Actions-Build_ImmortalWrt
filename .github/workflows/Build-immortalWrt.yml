@@ -70,7 +70,7 @@ on:
 
 env:
   SSH: false
-  UPLOAD_BIN_DIR: true
+  UPLOAD_BIN_DIR: false
   PATH_CACHE: /tmp/.cache
   NAME_IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
 
@@ -126,12 +126,12 @@ jobs:
         run: |
           mkdir -p ${{ env.PATH_CACHE }}/image
           if [[ -f "${{ env.PATH_CACHE }}/image/${{ env.NAME_IMAGE }}" ]]; then
-            echo "Import Docker image"
+            echo -e "\e[1;32mImport Docker image：\e[0m"
             docker load --input \
             ${{ env.PATH_CACHE }}/image/${{ env.NAME_IMAGE }}
           else
             docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
-            echo "Export the image to the cache directory"
+            echo -e "\e[1;32mExport the image to the cache directory\e[0m"
             docker save --output \
             ${{ env.PATH_CACHE }}/image/${{ env.NAME_IMAGE }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
@@ -179,7 +179,7 @@ jobs:
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: GitHub-Actions_${{ env.config }}
-          path: ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/packages
+          path: ${{ env.PATH_CACHE }}/packages
           
       - name: Upload ImmortWrt as release assets
         if: steps.building.outputs.status == 'success'
