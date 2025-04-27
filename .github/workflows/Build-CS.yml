@@ -69,7 +69,7 @@ on:
         required: false
 
 env:
-  PATH_CACHE: /tmp/docker_image/.cache
+  PATH_CACHE: /tmp/docker_image/cache
   UPLOAD_BIN_DIR: true
   SSH: false
 
