@@ -147,7 +147,7 @@ jobs:
           if [[ -f "${{ github.workspace }}/cache/dl/cs.txt" ]]; then
             echo "${{ github.workspace }}/cache/dl.....ok"
           else
-            echo "on" >${{ github.workspace }}/.cache/dl/cs.txt
+            echo "on" >${{ github.workspace }}/cache/dl/cs.txt
             echo "${{ github.workspace }}/cache/dl.....on"
           fi
           mkdir -p ${{ github.workspace }}/cache/packages
