@@ -38,7 +38,32 @@ while IFS= read -r LINE; do
     done
 done
 }
+function Check(){ # 检查缓存插件
+cat "$(pwd)/repositories.conf" | \
+while IFS= read -r LINE; do
+    [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz")" ]] && continue
+    name=$(echo "${LINE}" | cut -d " " -f 2)
+    url=$(echo "${LINE}" | cut -d " " -f 3)
+    [[ -z "${name}" || -z "${url}" ]] && continue
+    echo "Downloading ${url}/Packages.gz"
+    curl -# --fail "${url}/Packages.gz" -o "/tmp/Packages.gz"
+    [[ -f "/tmp/Packages.gz" && -f "$(pwd)/dl/${name}" ]] || continue
+    md5url=$(md5sum -b "/tmp/Packages.gz" | awk '{print $1}')
+    md5name=$(md5sum -b "$(pwd)/dl/${name}" | awk '{print $1}')
+    echo "md5sum: ${md5url}  ${md5name}"
+    [[ -z "${md5url}" || -z "${md5name}" ]] && continue
+    if [[ "${md5url}" == "${md5name}" ]]; then
+        echo "${name} 无更新插件."
+    else
+        rm -rf "$(pwd)/dl"
+        echo -e "删除所有缓存插件！" 
+        break
+    fi
+done
+}
+
 ###################################################################
+find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 
 #========== 添加首次启动时运行的脚本 ==========#
 [[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
@@ -57,6 +82,12 @@ Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
+if [[ -d "$(pwd)/dl" ]]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
+    Check
+else
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 没有缓存插件."
+fi
 echo "============================= 镜像信息 ============================="
 echo "路由器型号: $PROFILE"
 echo "固件大小: $ROOTFS_PARTSIZE"
