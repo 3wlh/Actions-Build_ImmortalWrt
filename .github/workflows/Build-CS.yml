@@ -136,6 +136,7 @@ jobs:
             echo "on" >${{ env.PATH_CACHE }}/packages/cs.txt
             echo "${{ env.PATH_CACHE }}/dl.....on"
           fi
+          docker images
         
       - name: Upload bin directory
         uses: actions/upload-artifact@main
