@@ -112,6 +112,7 @@ jobs:
         
       - name: cs
         run: |
+          mkdir -p ${{ env.PATH_CACHE }}/image
           if [[ -f "${{ env.PATH_CACHE }}/image/${{ env.IMAGE }}" ]]; then
             docker load --input \
             ${{ env.PATH_CACHE }}/image/${{ env.IMAGE }}
@@ -121,19 +122,19 @@ jobs:
             ${{ env.PATH_CACHE }}/image/${{ env.IMAGE }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           fi
-          mkdir -p ${{ github.workspace }}/cache/dl
-          if [[ -f "${{ github.workspace }}/cache/dl/cs.txt" ]]; then
-            echo "${{ github.workspace }}/cache/dl.....ok"
+          mkdir -p ${{ env.PATH_CACHE }}/dl
+          if [[ -f "${{ env.PATH_CACHE }}/dl/cs.txt" ]]; then
+            echo "${{ env.PATH_CACHE }}/dl.....ok"
           else
-            echo "on" >${{ github.workspace }}/cache/dl/cs.txt
-            echo "${{ github.workspace }}/cache/dl.....on"
+            echo "on" >${{ env.PATH_CACHE }}/dl/cs.txt
+            echo "${{ env.PATH_CACHE }}/dl.....on"
           fi
-          mkdir -p ${{ github.workspace }}/cache/packages
-          if [[ -f "${{ github.workspace }}/cache/packages/cs.txt" ]]; then
-            echo "${{ github.workspace }}/cache/packages.....ok"
+          mkdir -p ${{ env.PATH_CACHE }}/packages
+          if [[ -f "${{ env.PATH_CACHE }}/packages/cs.txt" ]]; then
+            echo "${{ env.PATH_CACHE }}/packages.....ok"
           else
-            echo "on" >${{ github.workspace }}/cache/packages/cs.txt
-            echo "${{ github.workspace }}/cache/dl.....on"
+            echo "on" >${{ env.PATH_CACHE }}/packages/cs.txt
+            echo "${{ env.PATH_CACHE }}/dl.....on"
           fi
         
       - name: Upload bin directory
