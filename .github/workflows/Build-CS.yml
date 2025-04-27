@@ -80,12 +80,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Setup Cache
-        uses: actions/cache@main
-        with:
-          path: ${{ env.PATH_CACHE }}
-          key: ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
-          
       - name: Configure environment variables
         run: |
           # ${{ steps.imagetag.outputs.hash }}
@@ -103,6 +97,12 @@ jobs:
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
               
+      - name: Setup Cache
+        uses: actions/cache@main
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image
+      
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
       
@@ -110,7 +110,7 @@ jobs:
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
           docker load --input \
-          ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
       
       - name: Pull base images if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
@@ -120,9 +120,9 @@ jobs:
       - name: Save/export built images to cache dir if no-cache
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          mkdir -p ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
+          mkdir -p ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image
           docker save --output \
-          ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
+          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
           immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           
       - name: cs
