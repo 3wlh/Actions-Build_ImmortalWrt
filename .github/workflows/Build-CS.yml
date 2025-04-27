@@ -112,13 +112,13 @@ jobs:
         
       - name: cs
         run: |
-          if [[ -f "${{ env.PATH_CACHE }}/image/${{ IMAGE }}" ]]; then
+          if [[ -f "${{ env.PATH_CACHE }}/image/${{ env.IMAGE }}" ]]; then
             docker load --input \
-            ${{ env.PATH_CACHE }}/image/${{ IMAGE }}
+            ${{ env.PATH_CACHE }}/image/${{ env.IMAGE }}
           else
             docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
             docker save --output \
-            ${{ env.PATH_CACHE }}/image/${{ IMAGE }} \
+            ${{ env.PATH_CACHE }}/image/${{ env.IMAGE }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           fi
           mkdir -p ${{ github.workspace }}/cache/dl
@@ -135,7 +135,7 @@ jobs:
             echo "on" >${{ github.workspace }}/cache/packages/cs.txt
             echo "${{ github.workspace }}/cache/dl.....on"
           fi
-          
+        
       - name: Upload bin directory
         uses: actions/upload-artifact@main
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
