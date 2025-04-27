@@ -88,12 +88,12 @@ jobs:
             ${{ github.workspace }}/cache
           key: |
             ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
-            ${{ github.workspace }}/cache/dl
-            ${{ github.workspace }}/cache/packages
           
       - name: Configure environment variables
         run: |
-          #${{ steps.imagetag.outputs.hash }}
+          # ${{ steps.imagetag.outputs.hash }}
+          # ${{ github.workspace }}/cache/dl
+          # ${{ github.workspace }}/cache/packages
           sudo timedatectl set-timezone "Asia/Shanghai"
           echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
           if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
@@ -105,20 +105,7 @@ jobs:
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
-             
-      - name: Create Edit info
-        run: |
-          echo "## 编译时间：\`${{ env.time }}\`" > info.md
-          echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
-          echo "## 固件信息：" >> info.md
-          echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
-          echo "* 固件地址 \`10.10.10.254\`" >> info.md
-          echo "* 用户名 \`root\` 密码：无" >> info.md
-          echo "* 默认软件包大小 \`${{ inputs.rootfs_partsize }}MB\`" >> info.md
-          if [[ "${{ inputs.docker }}" == "true" ]]; then
-            echo "* 添加\`docker\`版本" >> info.md
-          fi
-          
+              
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
       
