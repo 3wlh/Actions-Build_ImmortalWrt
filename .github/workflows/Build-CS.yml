@@ -69,8 +69,9 @@ on:
         required: false
 
 env:
-  PATH_CACHE: /tmp/docker_image/cache
+  PATH_CACHE: /tmp/.cache
   UPLOAD_BIN_DIR: true
+  IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
   SSH: false
 
 jobs:
@@ -101,7 +102,10 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image
+          key: |
+            ${{ env.PATH_CACHE }}/image
+            ${{ env.PATH_CACHE }}/dl
+            ${{ env.PATH_CACHE }}/packages
       
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
@@ -127,6 +131,15 @@ jobs:
           
       - name: cs
         run: |
+          if [[ -f "${{ env.PATH_CACHE }}/image/${{ IMAGE }}" ]]; then
+            docker load --input \
+            ${{ env.PATH_CACHE }}/image/${{ IMAGE }}
+          else
+            docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+            docker save --output \
+            ${{ env.PATH_CACHE }}/image/${{ IMAGE }} \
+            immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+          fi
           mkdir -p ${{ github.workspace }}/cache/dl
           if [[ -f "${{ github.workspace }}/cache/dl/cs.txt" ]]; then
             echo "${{ github.workspace }}/cache/dl.....ok"
