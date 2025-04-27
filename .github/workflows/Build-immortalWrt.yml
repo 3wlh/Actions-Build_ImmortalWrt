@@ -184,7 +184,7 @@ jobs:
         if: steps.image.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: GitHub-Actions_${{ env.arch }}-${{ env.profile }}
+          tag_name: GitHub-Actions_${{ env.device }}-${{ env.profile }}
           name: ImmortWrt-${{ env.device }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
