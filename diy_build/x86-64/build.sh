@@ -11,11 +11,13 @@ else
 fi
 }
 
-function Replace(){ # 修改配置
+function Replace(){ # 修改配置文件
 [[ -f "$(pwd)/.config" ]] || return
 if [[ -n "${2}" ]]; then
+    echo "修改：${1}"
 	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
 else
+    echo "删除：${1}"
 	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
 fi
 }
@@ -149,17 +151,16 @@ Replace "CONFIG_TARGET_KERNEL_PARTSIZE" "32"
 Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"
 Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
 Replace "CONFIG_TARGET_EXT4_JOURNAL"
-Replace "CONFIG_TARGET_ROOTFS_TARGZ"
+Replace "CONFIG_TARGET_ROOTFS_TARGZ" "n"
 Replace "CONFIG_ISO_IMAGES"
 Replace "CONFIG_QCOW2_IMAGES"
 Replace "CONFIG_VDI_IMAGES"
 Replace "CONFIG_VMDK_IMAGES"
 Replace "CONFIG_VHDX_IMAGES"
 # Replace "CONFIG_GRUB_IMAGES"
-echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
-# make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
-
+echo "============================= 打包镜像 ============================="
+make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
