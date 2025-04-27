@@ -81,6 +81,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
+      - name: Setup Cache
+        uses: actions/cache@main
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ inputs.image }}-${{ inputs.version }}
+          restore-keys: |
+            ${{ env.PATH_CACHE }}/image
+            ${{ env.PATH_CACHE }}/dl
+            ${{ env.PATH_CACHE }}/packages
+            
       - name: Configure environment variables
         run: |
           # ${{ steps.imagetag.outputs.hash }}
@@ -98,14 +108,7 @@ jobs:
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
           echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
               
-      - name: Setup Cache
-        uses: actions/cache@main
-        with:
-          path: ${{ env.PATH_CACHE }}
-          key: |
-            ${{ env.PATH_CACHE }}/image
-            ${{ env.PATH_CACHE }}/dl
-            ${{ env.PATH_CACHE }}/packages
+      
       
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
