@@ -85,11 +85,11 @@ jobs:
         with:
           path: |
             ${{ env.PATH_CACHE }}
-            ${{ github.workspace }}/.cache
+            ${{ github.workspace }}/cache
           key: |
-            ${{ inputs.image }}_${{ inputs.version }}/image
-            ${{ github.workspace }}/.cache/dl
-            ${{ github.workspace }}/.cache/packages
+            ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
+            ${{ github.workspace }}/cache/dl
+            ${{ github.workspace }}/cache/packages
           
       - name: Configure environment variables
         run: |
@@ -143,19 +143,19 @@ jobs:
           
       - name: cs
         run: |
-          mkdir -p ${{ github.workspace }}/.cache/dl
-          if [[ -f "${{ github.workspace }}/.cache/dl/cs.txt" ]]; then
-            echo "${{ github.workspace }}/.cache/dl.....ok"
+          mkdir -p ${{ github.workspace }}/cache/dl
+          if [[ -f "${{ github.workspace }}/cache/dl/cs.txt" ]]; then
+            echo "${{ github.workspace }}/cache/dl.....ok"
           else
             echo "on" >${{ github.workspace }}/.cache/dl/cs.txt
-            echo "${{ github.workspace }}/.cache/dl.....on"
+            echo "${{ github.workspace }}/cache/dl.....on"
           fi
-          mkdir -p ${{ github.workspace }}/.cache/packages
-          if [[ -f "${{ github.workspace }}/.cache/packages/cs.txt" ]]; then
-            echo "${{ github.workspace }}/.cache/packages.....ok"
+          mkdir -p ${{ github.workspace }}/cache/packages
+          if [[ -f "${{ github.workspace }}/cache/packages/cs.txt" ]]; then
+            echo "${{ github.workspace }}/cache/packages.....ok"
           else
-            echo "on" >${{ github.workspace }}/.cache/packages/cs.txt
-            echo "${{ github.workspace }}/.cache/dl.....on"
+            echo "on" >${{ github.workspace }}/cache/packages/cs.txt
+            echo "${{ github.workspace }}/cache/dl.....on"
           fi
           
       - name: Upload bin directory
