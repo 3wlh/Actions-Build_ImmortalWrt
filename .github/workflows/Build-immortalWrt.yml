@@ -104,7 +104,7 @@ jobs:
           [[ "${{ inputs.docker }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
           [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
-          echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
+          echo "device=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
              
       - name: Create Edit info
         run: |
@@ -141,7 +141,7 @@ jobs:
         if: env.SSH == 'true'
         uses: mxschmitt/action-tmate@master
         
-      - name: Building ${{ env.config }} ImmortalWrt
+      - name: Building ${{ env.device }} ImmortalWrt
         id: building
         run: |
           # exit 1
@@ -151,7 +151,7 @@ jobs:
             -v "${{ env.PATH_CACHE }}/packages:/home/build/immortalwrt/packages" \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
-            -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
+            -v "${{ github.workspace }}/diy_build/config/${{ env.device }}.config:/home/build/immortalwrt/.config_AAA" \
             -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:/home/build/immortalwrt/files" \
             -e PROFILE=${{ env.profile }} \
             -e INCLUDE_DOCKER=${{ inputs.docker }} \
@@ -178,15 +178,15 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
-          name: GitHub-Actions_${{ env.config }}
+          name: GitHub-Actions_${{ env.device }}
           path: ${{ env.PATH_CACHE }}/dl
           
       - name: Upload ImmortWrt as release assets
         if: steps.building.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: GitHub-Actions_${{ env.time }}
-          name: ImmortWrt-${{ env.config }}-${{ env.profile }}${{ env.docker }}
+          tag_name: GitHub-Actions_${{ env.device }}
+          name: ImmortWrt-${{ env.device }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
