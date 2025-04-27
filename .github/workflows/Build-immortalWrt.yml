@@ -84,9 +84,8 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ inputs.image }}_${{ inputs.version }}_Cache
+          key: ${{ inputs.image }}_${{ inputs.version }}/image
           restore-keys: |
-            ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
             ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/dl
             ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/packages
           
