@@ -46,10 +46,12 @@ while IFS= read -r LINE; do
     name=$(echo "${LINE}" | cut -d " " -f 2)
     url=$(echo "${LINE}" | cut -d " " -f 3)
     [[ -z "${name}" || -z "${url}" ]] && continue
+    echo "Downloading ${url}/Packages.gz"
     curl -# --fail "${url}/Packages.gz" -o "/tmp/Packages.gz"
     [[ -f "/tmp/Packages.gz" || -f "$(pwd)/dl/${name}" ]] && continue
     md5url=$(md5sum -b "/tmp/Packages.gz" | awk '{print $1}')
-    md5name=$(md5sum -b "$(pwd)/dl/${name}" | awk '{print $1}')1
+    md5name=$(md5sum -b "$(pwd)/dl/${name}" | awk '{print $1}')
+    echo "md5sum: ${md5url}  ${md5name}"
     [[ -z "${md5url}" || -z "${md5name}" ]] && continue
     [[ "${md5url}" == "${md5name}" ]] || rm -rf "$(pwd)/dl" && echo -e "删除所有缓存插件！" && break
     echo "${name} 无更新插件."
