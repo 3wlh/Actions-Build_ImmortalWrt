@@ -81,7 +81,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Setup Cache
+      - name: Enable Cache
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
@@ -125,15 +125,15 @@ jobs:
       - name: Check Docker images
         run: |
           mkdir -p ${{ env.PATH_CACHE }}/image
-          if [[ -f "${{ env.PATH_CACHE }}/image/${{ env.IMAGE }}" ]]; then
+          if [[ -f "${{ env.PATH_CACHE }}/image/${{ env.NAME_IMAGE }}" ]]; then
             echo "Import Docker image"
             docker load --input \
-            ${{ env.PATH_CACHE }}/image/${{ env.IMAGE }}
+            ${{ env.PATH_CACHE }}/image/${{ env.NAME_IMAGE }}
           else
             docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
             echo "Export the image to the cache directory"
             docker save --output \
-            ${{ env.PATH_CACHE }}/image/${{ env.IMAGE }} \
+            ${{ env.PATH_CACHE }}/image/${{ env.NAME_IMAGE }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
           fi
           
