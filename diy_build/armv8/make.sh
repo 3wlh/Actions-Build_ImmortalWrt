@@ -1,80 +1,17 @@
 #!/bin/bash
-#################### 函数 ####################
-function Download(){ # 下载函数
-echo "Downloading ${1}"
-if [[ -f "$(pwd)/packages/diy_packages/$(basename ${1})" ]]; then
-    echo "######################################################################## 100.0%"
-else
-    find $(pwd)/packages/diy_packages/ -type f -name "$(echo "$(basename ${1})" | cut -d "_" -f 1 )*.ipk" -exec rm -f {} \;
-    curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
-    # #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
-fi
-}
+echo "============================= 下载脚本 ============================="
+url="https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh"
+curl -# --fail "${url}/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
+curl -# --fail "${url}/Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
+curl -# --fail "${url}/Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
+curl -# --fail "${url}/Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
 
-function Replace(){ # 修改配置文件
-[[ -f "$(pwd)/.config" ]] || return
-if [[ -n "${2}" ]]; then
-    echo "修改：${1}"
-	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
-else
-    echo "删除：${1}"
-	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
-fi
-}
-
-
-
-function Segmentation(){ # 分割下载
-PACKAGES_URL="${1}"
-PACKAGES_NAME=(${2})
-wget -qO- "${PACKAGES_URL}" | \
-while IFS= read -r LINE; do
-    for PREFIX in "${PACKAGES_NAME[@]}"; do
-        if [[ "$LINE" == *"$PREFIX"* ]]; then
-            FILE=$(echo "$LINE" | grep -Eo 'href="[^"]*' | sed 's/href="//')
-            if [[ -z "$FILE" ]]; then
-                # echo "No file found in line, skipping"
-                continue
-            fi
-            Download_URL="${PACKAGES_URL}${FILE}"
-            Download "${Download_URL}"
-        fi
-    done
-done
-}
-
-function Check(){ # 检查缓存插件
-cat "$(pwd)/repositories.conf" | \
-while IFS= read -r LINE; do
-    [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz")" ]] && continue
-    name=$(echo "${LINE}" | cut -d " " -f 2)
-    url=$(echo "${LINE}" | cut -d " " -f 3)
-    [[ -z "${name}" || -z "${url}" ]] && continue
-    echo "Downloading ${url}/Packages.gz"
-    curl -# --fail "${url}/Packages.gz" -o "/tmp/Packages.gz"
-    [[ -f "/tmp/Packages.gz" && -f "$(pwd)/dl/${name}" ]] || continue
-    md5url=$(md5sum -b "/tmp/Packages.gz" | awk '{print $1}')
-    md5name=$(md5sum -b "$(pwd)/dl/${name}" | awk '{print $1}')
-    echo "md5sum: ${md5url}  ${md5name}"
-    [[ -z "${md5url}" || -z "${md5name}" ]] && continue
-    if [[ "${md5url}" == "${md5name}" ]]; then
-        echo "${name} 无更新插件."
-    else
-        rm -rf "$(pwd)/dl"
-        echo -e "删除所有缓存插件！" 
-        break
-    fi
-done
-}
-
-###################################################################
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
-
 #========== 添加首次启动时运行的脚本 ==========#
 [[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
 find "$(pwd)/files/" -maxdepth 1 -type f -name "*" -exec mv {} "$(pwd)/files/etc/uci-defaults/" \;
 
-echo "==============================下载插件=============================="
+echo "============================= 下载插件 ============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
 echo "Download_Path: $(pwd)/packages/diy_packages"
 
