@@ -1,0 +1,197 @@
+name: Build ImmortalWrt Image Builder
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: |
+          选择 OpenWrt 镜像
+        required: true
+        default: "rockchip-armv8-openwrt"
+        type: choice
+        options:
+          - rockchip-armv8-openwrt
+          - x86-64-openwrt
+          - armsr-armv8-openwrt
+          
+      version:
+        description: |
+          选择 OpenWrt 版本
+        required: true
+        default: "24.10.1"
+        type: choice
+        options:
+          - 23.05.5
+          - 24.10.1
+          
+      profile:
+        description: |
+          输入 软路由型号 可选值如下：
+        required: true
+        default: 'friendlyarm_nanopi-r6s'
+        type: choice
+        options:
+          - friendlyarm_nanopi-r6s
+          - xunlong_orangepi-5-plus
+          
+      rootfs_partsize:
+        description: |
+          设置软件包大小 单位(MB)
+        required: true
+        default: '1024'
+        type: choice
+        options:
+          - 512
+          - 1024
+          - 2048
+          - 4096
+          
+      docker:
+        description: |
+          是否编译 Docker 插件
+        required: true
+        default: false
+        type: boolean
+        
+      enable_pppoe:
+        description: |
+          是否使用PPPoE协议?
+        required: true
+        default: true
+        type: boolean
+        
+      pppoe_account:
+        description: |
+          是否添加 宽带账号? (可留空)
+        required: false
+      pppoe_password:
+        description: |
+          是否添加 宽带密码? (可留空)
+        required: false
+
+env:
+  SSH: false
+  UPLOAD_BIN_DIR: false
+  PATH_CACHE: /tmp/.cache
+  CACHE_IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+
+jobs:
+  Build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Enable Cache
+        uses: actions/cache@main
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ inputs.image }}-${{ inputs.version }}
+          restore-keys: |
+            ${{ env.PATH_CACHE }}/image
+            ${{ env.PATH_CACHE }}/dl
+            ${{ env.PATH_CACHE }}/packages
+          
+      - name: Configure environment variables
+        run: |
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
+          if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
+            echo "profile=generic" >> $GITHUB_ENV
+          else
+            echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
+          fi
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
+          echo "device=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
+             
+      - name: Create Edit info
+        run: |
+          echo "## 编译时间：\`${{ env.time }}\`" > info.md
+          echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
+          echo "## 固件信息：" >> info.md
+          echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
+          echo "* 固件地址 \`10.10.10.254\`" >> info.md
+          echo "* 用户名 \`root\` 密码：无" >> info.md
+          echo "* 默认软件包大小 \`${{ inputs.rootfs_partsize }}MB\`" >> info.md
+          if [[ "${{ inputs.docker }}" == "true" ]]; then
+            echo "* 添加\`docker\`版本" >> info.md
+          fi
+          
+      - name: Set executable permissions
+        run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/make.sh
+      
+      - name: Check Docker images
+        run: |
+          mkdir -p ${{ env.PATH_CACHE }}/image
+          if [[ -f "${{ env.PATH_CACHE }}/image/${{ env.CACHE_IMAGE }}" ]]; then
+            echo -e "\e[1;32mImport Docker image：\e[0m"
+            docker load --input \
+            ${{ env.PATH_CACHE }}/image/${{ env.CACHE_IMAGE }}
+          else
+            docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+            echo -e "\e[1;32mExport the image to the cache directory\e[0m"
+            docker save --output \
+            ${{ env.PATH_CACHE }}/image/${{ env.CACHE_IMAGE }} \
+            immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+          fi
+          
+      - name: SSH connection to Actions
+        if: env.SSH == 'true'
+        uses: mxschmitt/action-tmate@master
+        
+      - name: Building ${{ env.device }} ImmortalWrt
+        id: building
+        run: |
+          # exit 1
+          docker run --rm -i \
+            --user root \
+            -v "${{ env.PATH_CACHE }}/dl:/home/build/immortalwrt/dl" \
+            -v "${{ env.PATH_CACHE }}/packages:/home/build/immortalwrt/packages" \
+            -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
+            -v "${{ github.workspace }}/diy_build/${{ env.arch }}/make.sh:/home/build/immortalwrt/make.sh" \
+            -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:/home/build/immortalwrt/files" \
+            -e PROFILE=${{ env.profile }} \
+            -e INCLUDE_DOCKER=${{ inputs.docker }} \
+            -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
+            -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
+            -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
+            -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
+            immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/make.sh
+          echo "status=success" >> $GITHUB_OUTPUT
+          
+      - name: Upload bin directory
+        uses: actions/upload-artifact@main
+        if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        with:
+          name: GitHub-Actions_${{ env.device }}
+          path: ${{ env.PATH_CACHE }}/packages
+      
+      - name: Generate Firmware SHA-256
+        id: image
+        run: |
+          find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
+          cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.conf ${{ github.workspace }}
+          cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.config ${{ github.workspace }}
+          # cp ${{ github.workspace }}/${{ inputs.image }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
+          for file in *.img.gz; do
+            sha256sum "$file" > "$file.sha256"
+            sha256sum -c "$file.sha256"
+          done
+          echo "status=success" >> $GITHUB_OUTPUT
+          
+      - name: Upload ImmortWrt as release assets
+        if: steps.image.outputs.status == 'success'
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          tag_name: GitHub-Actions_${{ env.device }}-${{ env.profile }}
+          name: ImmortWrt-${{ env.device }}-${{ env.profile }}${{ env.docker }}
+          body_path: info.md
+          files: |
+            ${{ github.workspace }}/*.img.gz
+            ${{ github.workspace }}/*.conf
+            ${{ github.workspace }}/*.config
+            ${{ github.workspace }}/*.sha256
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
