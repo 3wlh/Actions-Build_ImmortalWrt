@@ -1,0 +1,166 @@
+name: Build-ImmortalWrt
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: |
+          选择 OpenWrt 镜像
+        required: true
+        default: "rockchip-armv8-openwrt"
+        type: choice
+        options:
+          - rockchip-armv8-openwrt
+          - x86-64-openwrt
+          - armsr-armv8-openwrt
+          
+      version:
+        description: |
+          选择 OpenWrt 版本
+        required: true
+        default: "24.10.1"
+        type: choice
+        options:
+          - 23.05.5
+          - 24.10.1
+          
+      profile:
+        description: |
+          输入 软路由型号 可选值如下：
+        required: true
+        default: 'friendlyarm_nanopi-r6s'
+        type: choice
+        options:
+          - friendlyarm_nanopi-r6s
+          - xunlong_orangepi-5-plus
+          
+      rootfs_partsize:
+        description: |
+          设置软件包大小 单位(MB)
+        required: true
+        default: '1024'
+        type: choice
+        options:
+          - 512
+          - 1024
+          - 2048
+          - 4096
+          
+      docker:
+        description: |
+          是否编译 Docker 插件
+        required: true
+        default: false
+        type: boolean
+        
+      enable_pppoe:
+        description: |
+          是否使用PPPoE协议?
+        required: true
+        default: true
+        type: boolean
+        
+      pppoe_account:
+        description: |
+          是否添加 宽带账号? (可留空)
+        required: false
+      pppoe_password:
+        description: |
+          是否添加 宽带密码? (可留空)
+        required: false
+
+env:
+  PATH_CACHE: /tmp/docker_image/.cache
+  UPLOAD_BIN_DIR: true
+  SSH: false
+
+jobs:
+  Build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Cache
+        uses: actions/cache@main
+        with:
+          path: |
+            ${{ env.PATH_CACHE }}
+            ${{ github.workspace }}/.cache
+          key: |
+            ${{ inputs.image }}_${{ inputs.version }}/image
+            ${{ github.workspace }}/.cache/dl
+            ${{ github.workspace }}/.cache/packages
+          
+      - name: Configure environment variables
+        run: |
+          #${{ steps.imagetag.outputs.hash }}
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
+          if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
+            echo "profile=generic" >> $GITHUB_ENV
+          else
+            echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
+          fi
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
+          echo "config=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV
+             
+      - name: Create Edit info
+        run: |
+          echo "## 编译时间：\`${{ env.time }}\`" > info.md
+          echo "## [![Github](https://img.shields.io/badge/Release文件可在国内加速站下载-FC7C0D?logo=github&logoColor=fff&labelColor=000&style=for-the-badge)](https://ghproxy.net/)" >> info.md
+          echo "## 固件信息：" >> info.md
+          echo "* 固件版本 \`${{ inputs.version }}\`" >> info.md
+          echo "* 固件地址 \`10.10.10.254\`" >> info.md
+          echo "* 用户名 \`root\` 密码：无" >> info.md
+          echo "* 默认软件包大小 \`${{ inputs.rootfs_partsize }}MB\`" >> info.md
+          if [[ "${{ inputs.docker }}" == "true" ]]; then
+            echo "* 添加\`docker\`版本" >> info.md
+          fi
+          
+      - name: Set executable permissions
+        run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
+      
+      - name: Load cached Docker images if any
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: |
+          docker load --input \
+          ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+      
+      - name: Pull base images if no-cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+        
+      - name: Save/export built images to cache dir if no-cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
+          docker save --output \
+          ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
+          immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
+          
+      - name: cs
+        run: |
+          mkdir -p ${{ github.workspace }}/.cache/dl
+          if [[ -f "${{ github.workspace }}/.cache/dl/cs.txt" ]]; then
+            echo "${{ github.workspace }}/.cache/dl.....ok"
+          else
+            echo "on" >${{ github.workspace }}/.cache/dl/cs.txt
+            echo "${{ github.workspace }}/.cache/dl.....on"
+          fi
+          mkdir -p ${{ github.workspace }}/.cache/packages
+          if [[ -f "${{ github.workspace }}/.cache/packages/cs.txt" ]]; then
+            echo "${{ github.workspace }}/.cache/packages.....ok"
+          else
+            echo "on" >${{ github.workspace }}/.cache/packages/cs.txt
+            echo "${{ github.workspace }}/.cache/dl.....on"
+          fi
+          
+      - name: Upload bin directory
+        uses: actions/upload-artifact@main
+        if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        with:
+          name: GitHub-Actions_${{ env.config }}
+          path: ${{ github.workspace }}/.cache
