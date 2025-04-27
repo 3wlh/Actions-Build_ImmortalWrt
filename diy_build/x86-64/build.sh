@@ -39,6 +39,7 @@ while IFS= read -r LINE; do
 done
 }
 ###################################################################
+find . -maxdepth 1 -type f -name "repositories.conf" -exec mv {} "$(pwd)/packages/" \;
 
 echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
@@ -125,7 +126,7 @@ Replace "CONFIG_VHDX_IMAGES"
 # Replace "CONFIG_GRUB_IMAGES"
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
-make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
+# make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
