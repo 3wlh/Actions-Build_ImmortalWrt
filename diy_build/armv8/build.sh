@@ -1,14 +1,5 @@
 #!/bin/bash
 #################### 函数 ####################
-function Replace(){ # 修改函数
-[[ -f "$(pwd)/.config" ]] || return
-if [[ -n "${2}" ]]; then
-	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
-else
-	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
-fi
-}
-
 function Download(){ # 下载函数
 echo "Downloading ${1}"
 if [[ -f "$(pwd)/packages/diy_packages/$(basename ${1})" ]]; then
@@ -20,7 +11,20 @@ else
 fi
 }
 
-function Segmentation(){ # 分割下载函数
+function Replace(){ # 修改配置文件
+[[ -f "$(pwd)/.config" ]] || return
+if [[ -n "${2}" ]]; then
+    echo "修改：${1}"
+	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
+else
+    echo "删除：${1}"
+	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
+fi
+}
+
+
+
+function Segmentation(){ # 分割下载
 PACKAGES_URL="${1}"
 PACKAGES_NAME=(${2})
 wget -qO- "${PACKAGES_URL}" | \
@@ -38,6 +42,7 @@ while IFS= read -r LINE; do
     done
 done
 }
+
 function Check(){ # 检查缓存插件
 cat "$(pwd)/repositories.conf" | \
 while IFS= read -r LINE; do
