@@ -179,7 +179,7 @@ jobs:
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: GitHub-Actions_${{ env.config }}
-          path: ${{ env.PATH_CACHE }}/packages
+          path: ${{ env.PATH_CACHE }}/dl
           
       - name: Upload ImmortWrt as release assets
         if: steps.building.outputs.status == 'success'
