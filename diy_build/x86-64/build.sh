@@ -1,9 +1,9 @@
 #!/bin/bash
 echo "==============================下载脚本=============================="
-curl -# --fail "https://github.com/3wlh/Actions-Build_ImmortalWrt/blob/main/.github/.sh/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
-curl -# --fail "https://github.com/3wlh/Actions-Build_ImmortalWrt/blob/main/.github/.sh/Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
-curl -# --fail "https://github.com/3wlh/Actions-Build_ImmortalWrt/blob/main/.github/.sh/Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
-curl -# --fail "https://github.com/3wlh/Actions-Build_ImmortalWrt/blob/main/.github/.sh/Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
+curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
+curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
+curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
+curl -# --fail "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh/Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 
 echo "==============================下载插件=============================="
