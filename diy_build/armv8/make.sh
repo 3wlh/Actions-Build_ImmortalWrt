@@ -94,10 +94,10 @@ Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
 Replace "CONFIG_TARGET_EXT4_JOURNAL"
 Replace "CONFIG_TARGET_KERNEL_PARTSIZE" "32"
 Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"
-echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
+echo "============================= 打包镜像 ============================="
+cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
-
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
