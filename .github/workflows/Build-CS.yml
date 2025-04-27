@@ -83,11 +83,8 @@ jobs:
       - name: Setup Cache
         uses: actions/cache@main
         with:
-          path: |
-            ${{ env.PATH_CACHE }}
-            ${{ github.workspace }}/cache
-          key: |
-            ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/image
           
       - name: Configure environment variables
         run: |
