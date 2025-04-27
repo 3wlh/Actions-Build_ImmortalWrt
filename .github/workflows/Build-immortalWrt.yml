@@ -28,10 +28,10 @@ workflow_dispatch:
       required: true
       default: 'friendlyarm_nanopi-r6s'
       type: choice
-        options:
+      options:
         - friendlyarm_nanopi-r6s
         - xunlong_orangepi-5-plus
-          
+        
     rootfs_partsize:
       description: |
         设置软件包大小 单位(MB)
@@ -39,11 +39,11 @@ workflow_dispatch:
       default: '1024'
       type: choice
       options:
-         - 512
-         - 1024
-         - 2048
-         - 4096
-          
+        - 512
+        - 1024
+        - 2048
+        - 4096
+           
     docker:
        description: |
         是否编译 Docker 插件
