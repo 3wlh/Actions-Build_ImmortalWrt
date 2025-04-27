@@ -109,26 +109,7 @@ jobs:
       
       - name: Set executable permissions
         run: chmod +x ${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh
-      
-      - name: Load cached Docker images if any
-        if: steps.cache.outputs.cache-hit == 'true'
-        run: |
-          docker load --input \
-          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
-      
-      - name: Pull base images if no-cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          docker pull immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
         
-      - name: Save/export built images to cache dir if no-cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image
-          docker save --output \
-          ${{ env.PATH_CACHE }}/${{ steps.imagetag.outputs.hash }}/${{ inputs.image }}_${{ inputs.version }}/image/imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar \
-          immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }}
-          
       - name: cs
         run: |
           if [[ -f "${{ env.PATH_CACHE }}/image/${{ IMAGE }}" ]]; then
