@@ -1,5 +1,4 @@
-name: Build-ImmortalWrt
-on:
+name: Build ImmortalWrt Image Builder
   workflow_dispatch:
     inputs:
       image:
