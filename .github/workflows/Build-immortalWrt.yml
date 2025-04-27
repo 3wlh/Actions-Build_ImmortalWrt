@@ -1,71 +1,71 @@
 name: Build ImmortalWrt Image Builder
-  workflow_dispatch:
-    inputs:
-      image:
-        description: |
-          选择 OpenWrt 镜像
-        required: true
-        default: "rockchip-armv8-openwrt"
-        type: choice
-        options:
-          - rockchip-armv8-openwrt
-          - x86-64-openwrt
-          - armsr-armv8-openwrt
+workflow_dispatch:
+  inputs:
+    image:
+      description: |
+        选择 OpenWrt 镜像
+      required: true
+      default: "rockchip-armv8-openwrt"
+      type: choice
+      options:
+        - rockchip-armv8-openwrt
+        - x86-64-openwrt
+        - armsr-armv8-openwrt
           
-      version:
-        description: |
-          选择 OpenWrt 版本
-        required: true
-        default: "24.10.1"
-        type: choice
-        options:
-          - 23.05.5
-          - 24.10.1
+    version:
+      description: |
+        选择 OpenWrt 版本
+      required: true
+      default: "24.10.1"
+      type: choice
+      options:
+        - 23.05.5
+        - 24.10.1
           
-      profile:
-        description: |
-          输入 软路由型号 可选值如下：
-        required: true
-        default: 'friendlyarm_nanopi-r6s'
-        type: choice
+    profile:
+      description: |
+        输入 软路由型号 可选值如下：
+      required: true
+      default: 'friendlyarm_nanopi-r6s'
+      type: choice
         options:
-          - friendlyarm_nanopi-r6s
-          - xunlong_orangepi-5-plus
+        - friendlyarm_nanopi-r6s
+        - xunlong_orangepi-5-plus
           
-      rootfs_partsize:
-        description: |
-          设置软件包大小 单位(MB)
-        required: true
-        default: '1024'
-        type: choice
-        options:
-          - 512
-          - 1024
-          - 2048
-          - 4096
+    rootfs_partsize:
+      description: |
+        设置软件包大小 单位(MB)
+      required: true
+      default: '1024'
+      type: choice
+      options:
+         - 512
+         - 1024
+         - 2048
+         - 4096
           
-      docker:
-        description: |
-          是否编译 Docker 插件
-        required: true
-        default: false
-        type: boolean
+    docker:
+       description: |
+        是否编译 Docker 插件
+      required: true
+       default: false
+       type: boolean
         
-      enable_pppoe:
-        description: |
-          是否使用PPPoE协议?
-        required: true
-        default: true
-        type: boolean
+    enable_pppoe:
+      description: |
+        是否使用PPPoE协议?
+      required: true
+      default: true
+      type: boolean
         
-      pppoe_account:
-        description: |
-          是否添加 宽带账号? (可留空)
-        required: false
-      pppoe_password:
-        description: |
-          是否添加 宽带密码? (可留空)
-        required: false
+    pppoe_account:
+      description: |
+        是否添加 宽带账号? (可留空)
+      required: false
+    pppoe_password:
+      description: |
+        是否添加 宽带密码? (可留空)
+      required: false
 
 env:
   SSH: false
