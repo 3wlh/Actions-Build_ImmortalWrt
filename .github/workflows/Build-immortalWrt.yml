@@ -162,27 +162,28 @@ jobs:
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/build.sh
           echo "status=success" >> $GITHUB_OUTPUT
           
-      - name: Generate Firmware SHA-256
-        id: image
-        run: |
-          find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
-          cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.config ${{ github.workspace }}
-          # cp ${{ github.workspace }}/${{ inputs.image }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
-          for file in *.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
-          echo "status=success" >> $GITHUB_OUTPUT
-          
+      
       - name: Upload bin directory
         uses: actions/upload-artifact@main
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: GitHub-Actions_${{ env.device }}
           path: ${{ env.PATH_CACHE }}/packages
+      
+      - name: Generate Firmware SHA-256
+        id: image
+        run: |
+          #find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
+          #cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.config ${{ github.workspace }}
+          # cp ${{ github.workspace }}/${{ inputs.image }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
+          #for file in *.img.gz; do
+            #sha256sum "$file" > "$file.sha256"
+            #sha256sum -c "$file.sha256"
+          #done
+          #echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Upload ImmortWrt as release assets
-        if: steps.building.outputs.status == 'success'
+        if: steps.image.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: GitHub-Actions_${{ env.device }}
