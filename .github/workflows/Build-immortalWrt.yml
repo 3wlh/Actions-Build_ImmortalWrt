@@ -93,7 +93,6 @@ jobs:
           
       - name: Configure environment variables
         run: |
-          #${{ steps.imagetag.outputs.hash }}
           sudo timedatectl set-timezone "Asia/Shanghai"
           echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
           if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
@@ -185,7 +184,7 @@ jobs:
         if: steps.image.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: GitHub-Actions_${{ env.device }}
+          tag_name: GitHub-Actions_${{ env.arch }}-${{ env.profile }}
           name: ImmortWrt-${{ env.device }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
