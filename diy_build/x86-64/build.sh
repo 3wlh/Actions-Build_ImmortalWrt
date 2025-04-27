@@ -56,7 +56,7 @@ while IFS= read -r LINE; do
 done
 }
 ###################################################################
-find . -maxdepth 1 -type f -name "repositories.conf" -exec mv {} "$(pwd)/packages/" \;
+find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 
 echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
