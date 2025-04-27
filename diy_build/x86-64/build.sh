@@ -1,15 +1,6 @@
 #!/bin/bash
 #################### 函数 ####################
-function Replace(){ # 修改函数
-[[ -f "$(pwd)/.config" ]] || return
-if [[ -n "${2}" ]]; then
-	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
-else
-	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
-fi
-}
-
-function Download(){ # 下载函数
+function Download(){ # 下载
 echo "Downloading ${1}"
 if [[ -f "$(pwd)/packages/diy_packages/$(basename ${1})" ]]; then
     echo "######################################################################## 100.0%"
@@ -20,7 +11,16 @@ else
 fi
 }
 
-function Segmentation(){ # 分割下载函数
+function Replace(){ # 修改配置
+[[ -f "$(pwd)/.config" ]] || return
+if [[ -n "${2}" ]]; then
+	sed -i "s/.*${1}.*/${1}=${2}/g" "$(pwd)/.config"
+else
+	sed -i "s/.*${1}.*/# ${1} is not set/g" "$(pwd)/.config"
+fi
+}
+
+function Segmentation(){ # 分割下载
 PACKAGES_URL="${1}"
 PACKAGES_NAME=(${2})
 wget -qO- "${PACKAGES_URL}" | \
@@ -38,6 +38,23 @@ while IFS= read -r LINE; do
     done
 done
 }
+
+function Check(){ # 检查缓存插件
+cat "$(pwd)/repositories.conf" | \
+while IFS= read -r LINE; do
+    [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz")" ]] && continue
+    name=$(echo "${LINE}" | cut -d " " -f 2)
+    url=$(echo "${LINE}" | cut -d " " -f 3)
+    [[ -z "${name}" || -z "${url}" ]] && continue
+    curl -# --fail "${url}/Packages.gz" -o "/tmp/Packages.gz"
+    [[ -f "/tmp/Packages.gz" || -f "$(pwd)/dl/${name}" ]] && continue
+    md5url=$(md5sum -b "/tmp/Packages.gz" | awk '{print $1}')
+    md5name=$(md5sum -b "$(pwd)/dl/${name}" | awk '{print $1}')1
+    [[ -z "${md5url}" || -z "${md5name}" ]] && continue
+    [[ "${md5url}" == "${md5name}" ]] || rm -rf "$(pwd)/dl" && echo -e "删除所有缓存插件！" && break
+    echo "${name} 无更新插件."
+done
+}
 ###################################################################
 find . -maxdepth 1 -type f -name "repositories.conf" -exec mv {} "$(pwd)/packages/" \;
 
@@ -53,6 +70,13 @@ Segmentation "https://op.dllkids.xyz/packages/x86_64/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
+echo "============================= 检查缓存 ============================="
+if [[ -d "$(pwd)/dl" ]]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
+    Check
+else
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 没有缓存插件."
+fi
 echo "============================= 镜像信息 ============================="
 echo "路由器型号: $PROFILE"
 echo "固件大小: $ROOTFS_PARTSIZE"
