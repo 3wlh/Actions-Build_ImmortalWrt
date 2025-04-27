@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "==============================下载脚本=============================="
 url="https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh"
-curl -# --fail "${url}/Download.sh" -o "/usr/bin/Download" && chmod 755 "//usr/bin/Download"
-curl -# --fail "${url}/Segmentation.sh" -o "/usr/bin/Segmentation" && chmod 755 "/usr/bin/Segmentation"
-curl -# --fail "${url}/Check.sh" -o "/usr/bin/Check" && chmod 755 "/usr/bin/Check"
-curl -# --fail "${url}/Replace.sh" -o "/usr/bin/Replace" && chmod 755 "/usr/bin/Replace"
+curl -# --fail "${url}/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
+curl -# --fail "${url}/Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
+curl -# --fail "${url}/Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
+curl -# --fail "${url}/Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
 
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 echo "==============================下载插件=============================="
