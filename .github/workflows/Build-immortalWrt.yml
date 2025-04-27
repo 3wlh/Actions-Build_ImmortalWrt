@@ -69,7 +69,7 @@ on:
         required: false
 
 env:
-  PATH_CACHE: /tmp/cache
+  PATH_CACHE: /tmp/docker_image/.cache
   UPLOAD_BIN_DIR: true
   SSH: false
 
@@ -83,12 +83,13 @@ jobs:
       - name: Setup Cache
         uses: actions/cache@main
         with:
-          path: ${{ env.PATH_CACHE }}
-          key: ${{ inputs.image }}_${{ inputs.version }}/image
-          restore-keys: |
-            ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/dl
-            ${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/packages
-          
+          path: |
+            ${{ env.PATH_CACHE }}
+            ${{ github.workspace }}/.cache
+          key: |
+            ${{ inputs.image }}_${{ inputs.version }}/image
+            ${{ github.workspace }}/.cache/dl
+            ${{ github.workspace }}/.cache/packages
           
       - name: Configure environment variables
         run: |
@@ -152,8 +153,8 @@ jobs:
             --user root \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_build/${{ env.arch }}/build.sh:/home/build/immortalwrt/build.sh" \
-            -v "${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/dl:/home/build/immortalwrt/dl" \
-            -v "${{ env.PATH_CACHE }}/${{ inputs.image }}_${{ inputs.version }}/packages:/home/build/immortalwrt/packages" \
+            -v "${{ github.workspace }}/.cache/dl:/home/build/immortalwrt/dl" \
+            -v "${{ github.workspace }}/.cache/packages:/home/build/immortalwrt/packages" \
             -v "${{ github.workspace }}/diy_build/config/${{ env.config }}.config:/home/build/immortalwrt/.config_AAA" \
             -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:/home/build/immortalwrt/files" \
             -e PROFILE=${{ env.profile }} \
