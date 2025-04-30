@@ -12,7 +12,6 @@ while IFS= read -r LINE; do
     md5url=$(find "$(pwd)/dl" -type f -name "*${name}*" 2>/dev/null -exec md5sum -b {} \; | awk '{print $1}')
     md5name=$(find "/tmp/" -type f -name "*Packages.gz*" 2>/dev/null -exec md5sum -b {} \; | awk '{print $1}')
     echo "md5sum: ${md5url}  ${md5name}"
-    [[ -z "${md5url}" || -z "${md5name}" ]] && continue
     if [[ "${md5url}" == "${md5name}" ]]; then
         echo "${name} 无更新插件."
     else
