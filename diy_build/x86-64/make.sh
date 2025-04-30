@@ -1,11 +1,15 @@
 #!/bin/bash
-echo "==============================下载脚本=============================="
-url="https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh"
-curl -# --fail "${url}/Download.sh" -o "/bin/Download" && chmod 755 "/bin/Download"
-curl -# --fail "${url}/Segmentation.sh" -o "/bin/Segmentation" && chmod 755 "/bin/Segmentation"
-curl -# --fail "${url}/Check.sh" -o "/bin/Check" && chmod 755 "/bin/Check"
-curl -# --fail "${url}/Replace.sh" -o "/bin/Replace" && chmod 755 "/bin/Replace"
-
+#====== 函数 ======#
+function Script(){
+Script_NAME=(${2})
+for Script in "${Script_NAME[@]}"; do
+    curl -# --fail "${1}/${Script}.sh" -o "/bin/${Script}" && \
+    chmod 755 "/bin/${Script}"
+ done     
+}
+echo "============================= 下载脚本 ============================="
+Script "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh" \
+"Download Segmentation Check Replace"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 echo "==============================下载插件=============================="
 [[ -d "$(pwd)/packages/diy_packages" ]] || mkdir -p "$(pwd)/packages/diy_packages"
