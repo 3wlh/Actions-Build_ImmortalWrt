@@ -91,14 +91,7 @@ jobs:
             ${{ env.PATH_CACHE }}/dl
             ${{ env.PATH_CACHE }}/packages
             
-      - name: Query Cleanup Cache
-        run: |
-          # List caches for current repository
-          gh cache list
-          # Delete a cache by key
-          gh cache delete ${{ inputs.image }}-${{ inputs.version }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
                     
       - name: Configure environment variables
         run: |
@@ -188,7 +181,18 @@ jobs:
             sha256sum -c "$file.sha256"
           done
           echo "status=success" >> $GITHUB_OUTPUT
-          
+      
+      - name: Query Cleanup Cache
+        run: |
+          if [[ -f "${{ github.workspace }}/${{ inputs.image }}/bin/delete.cache" ]]; then
+            # List caches for current repository
+            gh cache list
+            # Delete a cache by key
+            gh cache delete ${{ inputs.image }}-${{ inputs.version }}
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         
       - name: Upload ImmortWrt as release assets
         if: steps.image.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
