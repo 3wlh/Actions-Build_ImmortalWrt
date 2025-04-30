@@ -182,7 +182,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
-        if steps.images.outputs.delete == 'success'
+        if: steps.images.outputs.delete == 'success'
         run: |
           # List caches for current repository
           gh cache list
