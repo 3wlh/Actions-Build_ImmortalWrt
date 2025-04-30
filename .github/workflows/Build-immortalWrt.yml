@@ -158,8 +158,9 @@ jobs:
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/make.sh
+          test -f "${{ github.workspace }}/${{ inputs.image }}/bin/delete.cache" && echo "delete=success" >> $GITHUB_OUTPUT
+          test -f "${{ github.workspace }}/${{ inputs.image }}/bin/status.success" && echo "status=success" >> $GITHUB_OUTPUT
           exit 1
-          echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
@@ -169,7 +170,7 @@ jobs:
           path: ${{ env.PATH_CACHE }}/dl
       
       - name: Generate Firmware SHA-256
-        id: image
+        id: images
         run: |
           find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
           cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.conf ${{ github.workspace }}
@@ -182,20 +183,18 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
-        id: delete_cache
+        if steps.images.outputs.delete == 'success'
         run: |
-          if [[ -f "${{ github.workspace }}/${{ inputs.image }}/bin/delete.cache" ]]; then
             # List caches for current repository
             gh cache list
             # Delete a cache by key
             gh cache delete ${{ inputs.image }}-${{ inputs.version }}
             echo "status=success" >> $GITHUB_OUTPUT
-          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Reload again Cache
-        if: steps.delete_cache.outputs.status == 'success'
+        if: steps.images.outputs.delete == 'success'
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
@@ -206,7 +205,7 @@ jobs:
             ${{ env.PATH_CACHE }}/packages 
               
       - name: Upload ImmortWrt as release assets
-        if: steps.image.outputs.status == 'success'
+        if: steps.images.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: GitHub-Actions_${{ env.device }}-${{ env.profile }}
