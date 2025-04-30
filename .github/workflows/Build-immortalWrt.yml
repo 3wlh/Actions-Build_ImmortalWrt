@@ -143,7 +143,6 @@ jobs:
       - name: Building ${{ env.device }} ImmortalWrt
         id: building
         run: |
-          # exit 1
           docker run --rm -i \
             --user root \
             -v "${{ env.PATH_CACHE }}/dl:/home/build/immortalwrt/dl" \
@@ -160,7 +159,7 @@ jobs:
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/make.sh
           test -f "${{ github.workspace }}/${{ inputs.image }}/bin/delete.cache" && echo "delete=success" >> $GITHUB_OUTPUT
           test -f "${{ github.workspace }}/${{ inputs.image }}/bin/status.success" && echo "status=success" >> $GITHUB_OUTPUT
-          exit 1
+          # exit 1
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
