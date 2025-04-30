@@ -28,6 +28,7 @@ Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
+echo "============================= 检查缓存 ============================="
 if [[ -d "$(pwd)/dl" ]]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
     Check
