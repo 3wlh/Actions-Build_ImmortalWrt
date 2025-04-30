@@ -110,3 +110,4 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
+echo "status.success" > "$(pwd)/bin/status.success"
