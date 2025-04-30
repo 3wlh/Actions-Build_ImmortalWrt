@@ -100,10 +100,9 @@ jobs:
           BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
       
       - name: exit
-        id: building
         run: |
           exit 1
-              
+          
       - name: Enable Cache
         uses: actions/cache@main
         with:
