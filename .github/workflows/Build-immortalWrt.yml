@@ -81,17 +81,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Cleanup
-        run: |
-          # List caches for current repository
-          gh cache list
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: exit
-        run: |
-          exit 1
-          
       - name: Enable Cache
         uses: actions/cache@main
         with:
@@ -101,7 +90,16 @@ jobs:
             ${{ env.PATH_CACHE }}/image
             ${{ env.PATH_CACHE }}/dl
             ${{ env.PATH_CACHE }}/packages
-                
+            
+      - name: Query Cleanup Cache
+        run: |
+          # List caches for current repository
+          gh cache list
+          # Delete a cache by key
+          gh cache delete ${{ inputs.image }}-${{ inputs.version }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    
       - name: Configure environment variables
         run: |
           sudo timedatectl set-timezone "Asia/Shanghai"
