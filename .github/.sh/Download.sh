@@ -7,5 +7,5 @@ else
     curl -# --fail "${1}" -o "$(pwd)/packages/diy_packages/$(basename ${1})"
     # #wget -qO "$(pwd)/packages/diy_packages/$(basename $Download_URL)" "${Download_URL}" --show-progress
     # 删除 GitHub 缓存
-    echo "gh cache delete cache" > "$(pwd)/bin/delete.cache"
+    echo "delete.cache" > "$(pwd)/bin/delete.cache"
 fi
