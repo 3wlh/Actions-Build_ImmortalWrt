@@ -90,8 +90,6 @@ jobs:
             ${{ env.PATH_CACHE }}/image
             ${{ env.PATH_CACHE }}/dl
             ${{ env.PATH_CACHE }}/packages
-            
-      
                     
       - name: Configure environment variables
         run: |
@@ -183,6 +181,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
+        id: delete_cache
         run: |
           if [[ -f "${{ github.workspace }}/${{ inputs.image }}/bin/delete.cache" ]]; then
             # List caches for current repository
@@ -190,9 +189,21 @@ jobs:
             # Delete a cache by key
             gh cache delete ${{ inputs.image }}-${{ inputs.version }}
           fi
+          echo "status=success" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         
+      
+      - name: Enable Cache
+        if: steps.delete_cache.outputs.status == 'success'
+        uses: actions/cache@main
+        with:
+          path: ${{ env.PATH_CACHE }}
+          key: ${{ inputs.image }}-${{ inputs.version }}
+          restore-keys: |
+            ${{ env.PATH_CACHE }}/image
+            ${{ env.PATH_CACHE }}/dl
+            ${{ env.PATH_CACHE }}/packages 
+              
       - name: Upload ImmortWrt as release assets
         if: steps.image.outputs.status == 'success'
         uses: softprops/action-gh-release@v2.2.1
