@@ -184,11 +184,11 @@ jobs:
       - name: Query Cleanup Cache
         if steps.images.outputs.delete == 'success'
         run: |
-            # List caches for current repository
-            gh cache list
-            # Delete a cache by key
-            gh cache delete ${{ inputs.image }}-${{ inputs.version }}
-            echo "status=success" >> $GITHUB_OUTPUT
+          # List caches for current repository
+          gh cache list
+          # Delete a cache by key
+          gh cache delete ${{ inputs.image }}-${{ inputs.version }}
+          echo "status=success" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
