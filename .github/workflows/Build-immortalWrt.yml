@@ -70,7 +70,7 @@ on:
 
 env:
   SSH: false
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   PATH_CACHE: /tmp/.cache
   CACHE_IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
 
@@ -167,7 +167,7 @@ jobs:
         if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: GitHub-Actions_${{ env.device }}
-          path: ${{ env.PATH_CACHE }}/packages
+          path: ${{ env.PATH_CACHE }}/dl
       
       - name: Generate Firmware SHA-256
         id: image
