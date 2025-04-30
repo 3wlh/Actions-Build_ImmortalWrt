@@ -158,6 +158,7 @@ jobs:
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/make.sh
+          exit 1
           echo "status=success" >> $GITHUB_OUTPUT
           
       - name: Upload bin directory
