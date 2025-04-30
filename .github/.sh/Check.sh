@@ -1,5 +1,5 @@
 #!/bin/bash
-find "$(pwd)/dl" -type f
+# find "$(pwd)/dl" -type f
 cat "$(pwd)/repositories.conf" | \
 while IFS= read -r LINE; do
     [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz")" ]] && continue
@@ -17,7 +17,7 @@ while IFS= read -r LINE; do
     else
         # 删除 GitHub 缓存
         echo "gh cache delete cache" > "$(pwd)/bin/delete.cache"
-        rm -rf "$(pwd)/dl"
+        rm -rf "$(pwd)/dl/"
         echo -e "删除所有缓存插件！" 
         break
     fi
