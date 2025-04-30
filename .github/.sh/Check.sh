@@ -1,4 +1,5 @@
 #!/bin/bash
+find "$(pwd)/dl" -type f
 cat "$(pwd)/repositories.conf" | \
 while IFS= read -r LINE; do
     [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz")" ]] && continue
