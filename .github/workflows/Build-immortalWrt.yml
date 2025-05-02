@@ -157,18 +157,18 @@ jobs:
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/make.sh
-          test -f "${{ github.workspace }}/${{ inputs.image }}/bin/delete.cache" && echo "delete=success" >> $GITHUB_OUTPUT
-          test -f "${{ github.workspace }}/${{ inputs.image }}/bin/status.success" && echo "status=success" >> $GITHUB_OUTPUT
+          cat ${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
           # exit 1
           
       - name: Upload bin directory
         uses: actions/upload-artifact@main
-        if: steps.building.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+        if: steps.building.outputs.building == 'success' && env.UPLOAD_BIN_DIR == 'true'
         with:
           name: GitHub-Actions_${{ env.device }}
           path: ${{ env.PATH_CACHE }}/dl
       
       - name: Generate Firmware SHA-256
+        if: steps.building.outputs.building == 'success'
         id: images
         run: |
           find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
@@ -182,18 +182,17 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
-        if: steps.images.outputs.delete == 'success'
+        if: steps.images.outputs.cache == 'delete'
         run: |
           # List caches for current repository
           gh cache list
           # Delete a cache by key
           gh cache delete ${{ inputs.image }}-${{ inputs.version }}
-          echo "status=success" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Reload again Cache
-        if: steps.images.outputs.delete == 'success'
+        if: steps.images.outputs.cache == 'delete'
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}

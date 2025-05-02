@@ -16,7 +16,7 @@ while IFS= read -r LINE; do
         echo "${name} 无更新插件."
     else
         # 删除 GitHub 缓存
-        echo "delete.cache" > "$(pwd)/bin/delete.cache"
+        echo "cache=delete" >> "$(pwd)/bin/.bashrc"
         rm -rf "$(pwd)/dl/"
         echo -e "删除所有缓存插件！" 
         break
