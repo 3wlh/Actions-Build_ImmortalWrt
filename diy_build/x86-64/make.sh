@@ -108,8 +108,9 @@ make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
+    echo "building=fail" >> "$(pwd)/bin/.bashrc"
     exit 1
 fi
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
-echo "status.success" > "$(pwd)/bin/status.success"
+echo "building=success" >> "$(pwd)/bin/.bashrc"
