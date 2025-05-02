@@ -106,9 +106,9 @@ cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
-    echo "building=fail" > "$(pwd)/bin/.bashrc"
+    echo "building=fail" >> "$(pwd)/bin/.bashrc"
     exit 1
 fi
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
-echo "building=success" > "$(pwd)/bin/.bashrc"
+echo "building=success" >> "$(pwd)/bin/.bashrc"
