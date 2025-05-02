@@ -171,7 +171,6 @@ jobs:
         if: steps.building.outputs.building == 'success'
         id: images
         run: |
-          echo ${{ steps.building.outputs.building }}
           find ${{ github.workspace }}/${{ inputs.image }}/bin/targets/ -type f -name "*.img.gz" -exec cp {} ${{ github.workspace }} \;
           cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.conf ${{ github.workspace }}
           cp ${{ github.workspace }}/${{ inputs.image }}/bin/*.config ${{ github.workspace }}
