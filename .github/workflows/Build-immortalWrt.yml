@@ -204,7 +204,7 @@ jobs:
               
       - name: Upload ImmortWrt as release assets
         if: steps.images.outputs.status == 'success'
-        uses: softprops/action-gh-release@v2.2.1
+        uses: softprops/action-gh-release@master
         with:
           tag_name: GitHub-Actions_${{ env.device }}-${{ env.profile }}
           name: ImmortWrt-${{ env.device }}-${{ env.profile }}${{ env.docker }}
