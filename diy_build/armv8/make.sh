@@ -72,6 +72,7 @@ PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-app-unishare"
 PACKAGES="$PACKAGES luci-app-v2ray-server"
 PACKAGES="$PACKAGES sunpanel luci-app-sunpanel"
+PACKAGES="$PACKAGES nikki luci-app-nikki luci-i18n-nikki-zh-cn"
 # PACKAGES="$PACKAGES luci-i18n-cifs-mount-zh-cn"
 # DDNS解析
 PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod"
