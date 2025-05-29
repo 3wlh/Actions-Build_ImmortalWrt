@@ -6,7 +6,7 @@ on:
         description: |
           选择 OpenWrt 镜像
         required: true
-        default: "rockchip-armv8-openwrt"
+        default: "rockchip-armv8"
         type: choice
         options:
           - rockchip-armv8-openwrt
@@ -17,7 +17,7 @@ on:
         description: |
           选择 OpenWrt 版本
         required: true
-        default: "24.10.1"
+        default: "master"
         type: choice
         options:
           - 23.05.5
