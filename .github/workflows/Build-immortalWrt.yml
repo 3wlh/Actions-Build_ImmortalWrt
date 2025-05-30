@@ -165,7 +165,7 @@ jobs:
             -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
-            immortalwrt/imagebuilder:${{ inputs.image }}-${{ inputs.version }} /bin/bash /home/build/immortalwrt/make.sh
+            immortalwrt/imagebuilder:${{ env.IMAGE }} /bin/bash /home/build/immortalwrt/make.sh
           cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
           # exit 1
           
