@@ -75,9 +75,9 @@ uci commit firewall
 
 #==========================Network==========================
 # 更改 eth1 为 WAN 口
-uci del_list network.@device[0].ports="eth1"
-uci add_list network.@device[0].ports="eth2"
-uci set network.wan.device="eth1"
+uci del_list network.@device[0].ports="eth2"
+uci add_list network.@device[0].ports="eth1"
+uci set network.wan.device="eth2"
 # 删除 WAN6 口
 uci -q delete network.wan6
 # 设置拨号协议
