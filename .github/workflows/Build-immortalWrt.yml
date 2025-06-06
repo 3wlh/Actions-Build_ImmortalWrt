@@ -155,7 +155,7 @@ jobs:
             -v "${{ env.PATH_CACHE }}/dl:/home/build/immortalwrt/dl" \
             -v "${{ env.PATH_CACHE }}/packages:/home/build/immortalwrt/packages" \
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
-            -v "${{ github.workspace }}/diy_build/${{ env.arch }}/make.sh:/home/build/immortalwrt/make.sh" \
+            -v "${{ github.workspace }}/diy_make/${{ env.arch }}/make.sh:/home/build/immortalwrt/make.sh" \
             -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:/home/build/immortalwrt/files" \
             -e PROFILE=${{ env.profile }} \
             -e INCLUDE_DOCKER=${{ inputs.docker }} \
