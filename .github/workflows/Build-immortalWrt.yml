@@ -76,7 +76,7 @@ env:
   CACHE_IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
 
 jobs:
-  ${{ inputs.image }}:
+  Build:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
