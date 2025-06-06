@@ -85,18 +85,16 @@ jobs:
       - name: Configure docker image
         run: |
           if [[ "${{ inputs.version }}" == "master" ]]; then
-            IMAGE=${{ inputs.image }}-${{ inputs.version }}
+            echo "IMAGE=${{ inputs.image }}-${{ inputs.version }}" >> $GITHUB_ENV
           else
-            IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}
+            echo "IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}" >> $GITHUB_ENV
           fi
-          echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
-          echo "CACHE=${IMAGE}-$(echo -n "${IMAGE}" | md5sum | awk '{print $1}')" >> $GITHUB_ENV
           
       - name: Enable Cache
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.CACHE }}-
+          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
           
       - name: Configure environment variables
         run: |
@@ -203,7 +201,7 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.CACHE }}
+          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
           
       - name: Upload ImmortWrt as release assets
         if: steps.images.outputs.status == 'success'
