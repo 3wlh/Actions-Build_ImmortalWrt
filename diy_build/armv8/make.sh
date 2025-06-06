@@ -22,10 +22,10 @@ echo "Download_Path: $(pwd)/packages/diy_packages"
 sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki/' "repositories.conf"
 
-# Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
-# "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
-Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
+Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
+# Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
+# "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "============================= 检查缓存 ============================="
