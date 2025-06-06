@@ -21,7 +21,7 @@ on:
         type: choice
         options:
           - master
-          - 24.10.0
+          - 24.10
           - 24.10.1
           - 23.05.5
           
