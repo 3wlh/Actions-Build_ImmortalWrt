@@ -94,12 +94,8 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.IMAGE }}
-          restore-keys: |
-            ${{ env.PATH_CACHE }}/image
-            ${{ env.PATH_CACHE }}/dl
-            ${{ env.PATH_CACHE }}/packages
-            
+          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
+          
       - name: Configure environment variables
         run: |
           sudo timedatectl set-timezone "Asia/Shanghai"
@@ -205,12 +201,8 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.IMAGE }}
-          restore-keys: |
-            ${{ env.PATH_CACHE }}/image
-            ${{ env.PATH_CACHE }}/dl
-            ${{ env.PATH_CACHE }}/packages 
-              
+          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
+          
       - name: Upload ImmortWrt as release assets
         if: steps.images.outputs.status == 'success'
         uses: softprops/action-gh-release@master
