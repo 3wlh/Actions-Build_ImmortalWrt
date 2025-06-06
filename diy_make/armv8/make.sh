@@ -56,8 +56,8 @@ PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-uti
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap"
 # USB驱动
-PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
-PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
+# PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
+# PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 # 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
@@ -77,8 +77,8 @@ PACKAGES="$PACKAGES nikki luci-app-nikki luci-i18n-nikki-zh-cn"
 # DDNS解析
 PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod"
 # 增加几个必备组件 方便用户安装iStore
-PACKAGES="$PACKAGES fdisk"
-PACKAGES="$PACKAGES script-utils"
+# PACKAGES="$PACKAGES fdisk"
+# PACKAGES="$PACKAGES script-utils"
 # PACKAGES="$PACKAGES luci-i18n-samba4-zh-cn"
 # 添加Docker插件
 if $INCLUDE_DOCKER; then
