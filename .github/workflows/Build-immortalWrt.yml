@@ -89,12 +89,13 @@ jobs:
           else
             echo "IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}" >> $GITHUB_ENV
           fi
+          echo "CACHE=${IMAGE}-${{ echo -n "${IMAGE}" | md5sum | awk '{print $1}' }}" >> $GITHUB_ENV
           
       - name: Enable Cache
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
+          key: ${{ env.CACHE }}
           
       - name: Configure environment variables
         run: |
@@ -201,7 +202,7 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
+          key: ${{ env.CACHE }}
           
       - name: Upload ImmortWrt as release assets
         if: steps.images.outputs.status == 'success'
