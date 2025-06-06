@@ -85,11 +85,12 @@ jobs:
       - name: Configure docker image
         run: |
           if [[ "${{ inputs.version }}" == "master" ]]; then
-            echo "IMAGE=${{ inputs.image }}-${{ inputs.version }}" >> $GITHUB_ENV
+            IMAGE=${{ inputs.image }}-${{ inputs.version }}
           else
-            echo "IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}" >> $GITHUB_ENV
+            IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}
           fi
-          echo "CACHE=${IMAGE}-${{ echo -n "${IMAGE}" | md5sum | awk '{print $1}' }}" >> $GITHUB_ENV
+          echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
+          echo "CACHE=${IMAGE}-${{ echo "${IMAGE}" | md5sum | awk '{print $1}' }}" >> $GITHUB_ENV
           
       - name: Enable Cache
         uses: actions/cache@main
