@@ -94,7 +94,7 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
+          key: ${{ env.IMAGE }}-$(echo -n "${env.IMAGE}" | md5sum | awk '{print $1}'}
           
       - name: Configure environment variables
         run: |
@@ -201,7 +201,7 @@ jobs:
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
-          key: ${{ env.IMAGE }}-${{ echo -n "${env.IMAGE}" | md5sum | awk '{print $1}' }}
+          key: ${{ env.IMAGE }}-$(echo -n "${env.IMAGE}" | md5sum | awk '{print $1}'}
           
       - name: Upload ImmortWrt as release assets
         if: steps.images.outputs.status == 'success'
