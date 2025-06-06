@@ -17,10 +17,11 @@ on:
         description: |
           选择 OpenWrt 版本
         required: true
-        default: "master"
+        default: "24.10"
         type: choice
         options:
           - master
+          - 24.10
           - 23.05.5
           - 24.10.1
           
