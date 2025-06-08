@@ -111,6 +111,12 @@ if [ $? -ne 0 ]; then
     echo "building=fail" >> "$(pwd)/bin/.bashrc"
     exit 1
 fi
-
-echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
-echo "building=success" >> "$(pwd)/bin/.bashrc"
+if [[ -f "$(find "$(pwd)/bin/targets/" -type f -name "*.img.gz")" ]]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
+    echo "building=success" >> "$(pwd)/bin/.bashrc"
+    exit 1
+else
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
+    echo "building=fail" >> "$(pwd)/bin/.bashrc"
+fi
+exit 1 
