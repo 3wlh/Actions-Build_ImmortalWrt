@@ -56,8 +56,8 @@ PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-uti
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap"
 # USB驱动
-# PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
-# PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
+PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
+PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 # 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
@@ -103,7 +103,7 @@ Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
-make image PROFILE=$PROFILE PACKAGES="$PACKAGES1" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
+make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
