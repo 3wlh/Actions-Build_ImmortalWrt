@@ -20,6 +20,7 @@ on:
         default: "24.10.1"
         type: choice
         options:
+          - "24.10-SNAPSHOT"
           - "24.10.1"
           - "24.10"
           - "23.05.5"
@@ -84,7 +85,7 @@ jobs:
         
       - name: Configure docker image
         run: |
-          if [[ "${{ inputs.version }}" == "master" ]]; then
+          if [[ "${{ inputs.version }}" == "master" || "${{ inputs.version }}" =~ "SNAPSHOT" ]]; then
             IMAGE=${{ inputs.image }}-${{ inputs.version }}
           else
             IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}
