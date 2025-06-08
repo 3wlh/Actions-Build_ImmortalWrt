@@ -17,10 +17,10 @@ echo "Download_Path: $(pwd)/packages/diy_packages"
 # sed -i '1a src/gz openwrt_kiddin9 https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9' "repositories.conf"
 # sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 
-# Segmentation "https://dl.openwrt.ai/releases/24.10/packages/x86_64/kiddin9/" \
-# "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
-Segmentation "https://op.dllkids.xyz/packages/x86_64/" \
+Segmentation "https://dl.openwrt.ai/releases/24.10/packages/x86_64/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
+# Segmentation "https://op.dllkids.xyz/packages/x86_64/" \
+# "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "============================= 检查缓存 ============================="
