@@ -95,15 +95,15 @@ echo "$(make info | grep "Default Packages:" | sed 's/Default Packages: //')"
 echo "=========================== 编译添加插件 ==========================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 编译添加插件："
 echo "$PACKAGES"
-#========== 更改kmods版本 ==========#
-echo "========== 查看kmods版本 =========="
-Kmods
 echo "============================ 编辑Config ============================"
 Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
 Replace "CONFIG_TARGET_EXT4_JOURNAL"
 Replace "CONFIG_TARGET_KERNEL_PARTSIZE" "32"
 Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
+#========== kmods版本 ==========#
+echo "========== kmods版本 =========="
+Kmods
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE

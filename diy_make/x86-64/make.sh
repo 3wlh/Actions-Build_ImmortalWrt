@@ -102,6 +102,9 @@ Replace "CONFIG_VDI_IMAGES"
 Replace "CONFIG_VMDK_IMAGES"
 Replace "CONFIG_VHDX_IMAGES"
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
+#========== kmods版本 ==========#
+echo "========== kmods版本 =========="
+Kmods
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES1" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
