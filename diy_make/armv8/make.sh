@@ -88,8 +88,6 @@ fi
 #========== 删除插件包 ==========#
 PACKAGES="$PACKAGES -luci-app-cpufreq"
 
-
-
 #=============== 开始打包镜像 ===============#
 echo "============================= 默认插件 ============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认插件包："
@@ -98,12 +96,8 @@ echo "=========================== 编译添加插件 ===========================
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 编译添加插件："
 echo "$PACKAGES"
 #========== 更改kmods版本 ==========#
-echo "========== 更改kmods版本 =========="
-if [[ "${KMODS}" == "all" ]]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认kmods版本"
-else
-    Kmods "${KMODS}"
-fi
+echo "========== 查看kmods版本 =========="
+Kmods
 echo "============================ 编辑Config ============================"
 Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
 Replace "CONFIG_TARGET_EXT4_JOURNAL"

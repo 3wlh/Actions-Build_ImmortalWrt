@@ -25,16 +25,6 @@ on:
           - "24.10"
           - "23.05.5"
       
-      kmods:
-        description: |
-          设置内核版本：
-        required: true
-        default: 'all'
-        type: choice
-        options:
-          - "all"
-          - "6.6.83"
-      
       profile:
         description: |
           输入 软路由型号 可选值如下：
@@ -168,7 +158,6 @@ jobs:
             -v "${{ github.workspace }}/${{ inputs.image }}/bin:/home/build/immortalwrt/bin" \
             -v "${{ github.workspace }}/diy_make/${{ env.arch }}/make.sh:/home/build/immortalwrt/make.sh" \
             -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:/home/build/immortalwrt/files" \
-            -e KMODS=${{ inputs.kmods }} \
             -e PROFILE=${{ env.profile }} \
             -e INCLUDE_DOCKER=${{ inputs.docker }} \
             -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
