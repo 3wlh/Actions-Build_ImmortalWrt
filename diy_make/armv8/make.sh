@@ -9,7 +9,7 @@ for Script in "${Script_NAME[@]}"; do
 }
 echo "============================= 下载脚本 ============================="
 Script "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh" \
-"Download Segmentation Check Replace"
+"Download Segmentation Check Replace Kmods"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 #========== 添加首次启动时运行的脚本 ==========#
 [[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
@@ -88,6 +88,8 @@ fi
 #========== 删除插件包 ==========#
 PACKAGES="$PACKAGES -luci-app-cpufreq"
 
+
+
 #=============== 开始打包镜像 ===============#
 echo "============================= 默认插件 ============================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认插件包："
@@ -95,6 +97,13 @@ echo "$(make info | grep "Default Packages:" | sed 's/Default Packages: //')"
 echo "=========================== 编译添加插件 ==========================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 编译添加插件："
 echo "$PACKAGES"
+#========== 更改kmods版本 ==========#
+echo "========== 更改kmods版本 =========="
+if [[ "${KMODS}" == "all" ]]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 默认kmods版本"
+else
+    Kmods "${KMODS}"
+fi
 echo "============================ 编辑Config ============================"
 Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
 Replace "CONFIG_TARGET_EXT4_JOURNAL"
