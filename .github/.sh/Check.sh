@@ -2,7 +2,7 @@
 # find "$(pwd)/dl" -type f
 cat "$(pwd)/repositories.conf" | \
 while IFS= read -r LINE; do
-    [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz")" ]] && continue
+    [[ -z "$(echo "${LINE}" | grep -Eo "^src/gz immortalwrt_")" ]] && continue
     name=$(echo "${LINE}" | cut -d " " -f 2)
     url=$(echo "${LINE}" | cut -d " " -f 3)
     [[ -z "${name}" || -z "${url}" ]] && continue
