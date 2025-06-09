@@ -10,6 +10,7 @@ while IFS= read -r LINE; do
 	kmods_url="${url%/*}"
 	kmods_version="${url##*/}"
 	echo "$(date '+%Y-%m-%d %H:%M:%S') - kmods版本：${kmods_version}"
+	[[ -n "${1}" ]] && sed -i "s/${url}/${1}/" "$(pwd)/repositories.conf"
 	# wget -qO- "${kmods_url}" | \
 	# while IFS= read -r line; do
     	# if [[ "$line" == *"${1}"* ]]; then
