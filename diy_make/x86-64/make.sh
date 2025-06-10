@@ -117,6 +117,6 @@ if [[ -f "$(find "$(pwd)/bin/targets/" -type f -name "*.img.gz")" ]]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像完成."
     echo "building=success" >> "$(pwd)/bin/.bashrc"
 else
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 文件不存在, 打包镜像失败!"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像文件失败!"
     echo "building=fail" >> "$(pwd)/bin/.bashrc"
 fi 
