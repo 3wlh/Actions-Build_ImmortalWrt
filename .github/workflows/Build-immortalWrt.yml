@@ -1,7 +1,17 @@
-name: Build ImmortalWrt Image Builder
+name: Build OpenWrt Image Builder
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: |
+          选择 OpenWrt 分支
+        required: true
+        default: "immortalwrt"
+        type: choice
+        options:
+          - immortalwrt
+          - openwrt
+          
       image:
         description: |
           选择 OpenWrt 镜像
@@ -17,12 +27,12 @@ on:
         description: |
           选择 OpenWrt 版本
         required: true
-        default: "24.10.1"
+        default: "24.10.0"
         type: choice
         options:
           - "24.10-SNAPSHOT"
           - "24.10.1"
-          - "24.10"
+          - "24.10.0"
           - "23.05.5"
       
       profile:
@@ -85,7 +95,7 @@ jobs:
         
       - name: Configure docker image
         run: |
-          if [[ "${{ inputs.version }}" == "master" || "${{ inputs.version }}" =~ "SNAPSHOT" ]]; then
+          if [[ "${{ inputs.version }}" =~ "SNAPSHOT" || "${{ inputs.branch }}" == "openwrt" ]]; then
             IMAGE=${{ inputs.image }}-${{ inputs.version }}
           else
             IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}
@@ -164,7 +174,7 @@ jobs:
             -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
-            immortalwrt/imagebuilder:${{ env.IMAGE }} /bin/bash /home/build/immortalwrt/make.sh
+            ${{ inputs.image }}/imagebuilder:${{ env.IMAGE }} /bin/bash /home/build/immortalwrt/make.sh
           cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
           # exit 1
           
