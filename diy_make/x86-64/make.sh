@@ -48,7 +48,7 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
 #========== 定义所需安装的包列表 ==========#
 PACKAGES=""
 PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util"
-PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-lib-zstd"
+PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-lib-zstd openssh-sftp-server"
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
