@@ -82,7 +82,7 @@ PACKAGES="$PACKAGES luci-app-v2ray-server"
 PACKAGES="$PACKAGES sunpanel luci-app-sunpanel"
 PACKAGES="$PACKAGES nikki luci-app-nikki luci-i18n-nikki-zh-cn"
 # DDNS解析
-PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod knot-host" #bind-host
+PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod bind-host" #knot-host
 # 增加几个必备组件 方便用户安装iStore
 # PACKAGES="$PACKAGES fdisk"
 # PACKAGES="$PACKAGES script-utils"
