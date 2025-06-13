@@ -57,7 +57,7 @@ PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-z
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
-PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
+PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-nat" # kmod-nft-fullcone
 # 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
@@ -87,6 +87,13 @@ if $INCLUDE_DOCKER; then
     PACKAGES="$PACKAGES docker-compose luci-i18n-dockerman-zh-cn"
     echo "添加Package: luci-i18n-dockerman-zh-cn"
 fi
+if [[ "$BRANCH"=="openwrt" ]]; then
+    echo "========== 修改仓库 =========="
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
+    Repositories "downloads.immortalwrt.org"
+    else
+    PACKAGES="$PACKAGES  kmod-nft-fullcone"
+fi
 #========== 删除插件包 ==========#
 PACKAGES="$PACKAGES -luci-app-cpufreq"
 
@@ -106,11 +113,6 @@ cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 #========== kmods版本 ==========#
 echo "========== kmods版本 =========="
 Kmods
-if [[ "$BRANCH"=="openwrt" ]]; then
-    echo "========== 修改仓库 =========="
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
-    Repositories "downloads.immortalwrt.org"
-fi
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
