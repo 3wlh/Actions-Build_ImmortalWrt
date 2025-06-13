@@ -107,7 +107,8 @@ cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 echo "========== kmods版本 =========="
 Kmods
 if [[ "$BRANCH"=="openwrt" ]]; then
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库："
+    echo "========== 修改仓库 =========="
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
     Repositories "downloads.immortalwrt.org"
 fi
 echo "============================= 打包镜像 ============================="
