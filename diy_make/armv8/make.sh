@@ -29,6 +29,11 @@ Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kidd
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "============================= 检查缓存 ============================="
+if [[ "$BRANCH"=="openwrt" ]]; then
+    echo "========== 修改仓库 =========="
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
+    Repositories "downloads.immortalwrt.org"
+fi
 if [[ $(find "$(pwd)/dl" -type f 2>/dev/null | wc -l) -gt 0 ]]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
     Check
@@ -57,7 +62,7 @@ PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-z
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
-PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-nat" # kmod-nft-fullcone
+PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 # 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
@@ -86,13 +91,6 @@ PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudf
 if $INCLUDE_DOCKER; then
     PACKAGES="$PACKAGES docker-compose luci-i18n-dockerman-zh-cn"
     echo "添加Package: luci-i18n-dockerman-zh-cn"
-fi
-if [[ "$BRANCH"=="openwrt" ]]; then
-    echo "========== 修改仓库 =========="
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
-    Repositories "downloads.immortalwrt.org"
-    else
-    PACKAGES="$PACKAGES  kmod-nft-fullcone"
 fi
 #========== 删除插件包 ==========#
 PACKAGES="$PACKAGES -luci-app-cpufreq"
