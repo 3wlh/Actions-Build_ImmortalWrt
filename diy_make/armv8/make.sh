@@ -29,7 +29,7 @@ Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kidd
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "============================= 检查缓存 ============================="
-if [[ "$BRANCH"=="openwrt" ]]; then
+if [[ "${BRANCH}"=="openwrt" ]]; then
     echo "========== 修改仓库 =========="
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
     Repositories "downloads.immortalwrt.org"
