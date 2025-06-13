@@ -152,11 +152,11 @@ jobs:
             docker load --input \
             ${{ env.PATH_CACHE }}/image/${{ env.CACHE_IMAGE }}
           else
-            docker pull immortalwrt/imagebuilder:${{ env.IMAGE }}
+            docker pull ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }}
             echo -e "\e[1;32mExport the image to the cache directory\e[0m"
             docker save --output \
             ${{ env.PATH_CACHE }}/image/${{ env.CACHE_IMAGE }} \
-            immortalwrt/imagebuilder:${{ env.IMAGE }}
+            ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }}
           fi
           
       - name: SSH connection to Actions
@@ -180,7 +180,7 @@ jobs:
             -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
-            ${{ inputs.image }}/imagebuilder:${{ env.IMAGE }} /bin/bash ${{ env.builder }}/make.sh
+            ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }} /bin/bash ${{ env.builder }}/make.sh
           cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
           # exit 1
           
