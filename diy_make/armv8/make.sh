@@ -9,7 +9,7 @@ for Script in "${Script_NAME[@]}"; do
 }
 echo "============================= 下载脚本 ============================="
 Script "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh" \
-"Download Segmentation Check Replace Kmods"
+"Download Segmentation Check Replace Kmods Repositories"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 #========== 添加首次启动时运行的脚本 ==========#
 [[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
@@ -106,6 +106,10 @@ cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 #========== kmods版本 ==========#
 echo "========== kmods版本 =========="
 Kmods
+if [[ "$BRANCH"=="openwrt" ]]; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库："
+    Repositories "downloads.immortalwrt.org"
+fi
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
 make image PROFILE=$PROFILE PACKAGES="$PACKAGES" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
