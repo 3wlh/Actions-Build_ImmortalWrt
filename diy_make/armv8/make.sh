@@ -21,7 +21,8 @@ echo "Download_Path: $(pwd)/packages/diy_packages"
 # 禁止检查签名
 sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki' "repositories.conf"
-
+Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/targets/rockchip/armv8/kmods/6.6.73-1-f03df7cf7b7424bf4377334a801e4b66/" \
+"kmod-nft-fullcone"
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 # Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
