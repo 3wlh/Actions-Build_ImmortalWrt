@@ -9,7 +9,7 @@ for Script in "${Script_NAME[@]}"; do
 }
 echo "============================= 下载脚本 ============================="
 Script "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh" \
-"Download Segmentation Check Replace Kmods Repositories"
+"Download Segmentation Check Replace Kmods Repositories Passwall"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 #========== 添加首次启动时运行的脚本 ==========#
 [[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
@@ -21,8 +21,9 @@ echo "Download_Path: $(pwd)/packages/diy_packages"
 # 禁止检查签名
 sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki' "repositories.conf"
-Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/targets/rockchip/armv8/kmods/6.6.73-1-f03df7cf7b7424bf4377334a801e4b66/" \
-"kmod-nft-fullcone"
+Passwall "aarch64_generic"
+Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
+"luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn"
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 # Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
@@ -31,9 +32,9 @@ echo "=========================== 查看下载插件 ===========================
 ls $(pwd)/packages/diy_packages
 echo "============================= 检查缓存 ============================="
 if [[ "${BRANCH}"=="openwrt" ]]; then
-    echo "========== 修改仓库 =========="
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
-    Repositories "downloads.immortalwrt.org"
+    #echo "========== 修改仓库 =========="
+    #echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
+    #Repositories "downloads.immortalwrt.org"
 fi
 if [[ $(find "$(pwd)/dl" -type f 2>/dev/null | wc -l) -gt 0 ]]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
@@ -62,7 +63,7 @@ PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-uti
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
 # USB驱动
-# PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
+PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 # PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 # 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
