@@ -21,9 +21,11 @@ echo "Download_Path: $(pwd)/packages/diy_packages"
 # 禁止检查签名
 sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki' "repositories.conf"
-Passwall "aarch64_generic"
-Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
+if [[ "${BRANCH}"="openwrt" ]]; then
+    Passwall "aarch64_generic"
+    Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
 "luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn"
+fi
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 # Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
@@ -31,11 +33,11 @@ Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kidd
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
 echo "============================= 检查缓存 ============================="
-if [[ "${BRANCH}"=="openwrt" ]]; then
+#if [[ "${BRANCH}"="openwrt" ]]; then
     #echo "========== 修改仓库 =========="
     #echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
     #Repositories "downloads.immortalwrt.org"
-fi
+#fi
 if [[ $(find "$(pwd)/dl" -type f 2>/dev/null | wc -l) -gt 0 ]]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
     Check
