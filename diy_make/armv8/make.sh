@@ -71,8 +71,8 @@ PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-uti
 PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core 
 kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-dma-helper 
 kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm" # kmod-input-core kmod-thermal
-if [[ "${BRANCH}"=~"immortalwrt" ]]; then
-echo echo "========== 编译 ${BRANCH} =========="
+if [ "${BRANCH}"="immortalwrt" ]; then
+echo "========== 编译 ${BRANCH} =========="
 PACKAGES="$PACKAGES  kmod-drm-gem-shmem-helper kmod-drm-lima  kmod-drm-panfrost kmod-drm-rockchip"
 fi
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
