@@ -222,12 +222,12 @@ jobs:
           path: ${{ env.PATH_CACHE }}
           key: ${{ env.CACHE_KEY }}
           
-      - name: Upload ImmortWrt as release assets
+      - name: Upload ${{ inputs.branch }} as release assets
         if: steps.images.outputs.status == 'success'
         uses: softprops/action-gh-release@master
         with:
           tag_name: GitHub-Actions_${{ env.device }}-${{ env.profile }}
-          name: ImmortWrt-${{ env.device }}-${{ env.profile }}${{ env.docker }}
+          name: ${{ env.device }}-${{ env.profile }}${{ env.docker }}
           body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
