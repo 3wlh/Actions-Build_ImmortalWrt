@@ -24,7 +24,9 @@ sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_gener
 if [[ "${BRANCH}"="openwrt" ]]; then
     Passwall "aarch64_generic"
     Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
-"luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn"
+"luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn luci-app-argon-config luci-i18n-argon-config-zh-cn luci-theme-argon"
+    Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/packages/" \
+"ddns-scripts_aliyun "
 fi
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
@@ -64,8 +66,16 @@ PACKAGES=""
 #========== 删除插件包 ==========#
 PACKAGES="$PACKAGES -luci-app-cpufreq -dnsmasq"
 #========== 添加插件包 ==========#
-PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util"
-PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
+PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util coremark ds-lite e2fsprogs htop"
+# 内核驱动
+PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core 
+kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-dma-helper 
+kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm " # kmod-input-core kmod-thermal
+
+if [[ "${BRANCH}"="immortalwrt" ]]; then
+echo echo "========== 编译 immortalwrt =========="
+PACKAGES="$PACKAGES  kmod-drm-gem-shmem-helper kmod-drm-lima  kmod-drm-panfrost kmod-drm-rockchip"
+fi
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
