@@ -72,7 +72,7 @@ PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core" # k
 PACKAGES="$PACKAGES kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-dma-helper kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm"
 if [[ "${BRANCH}" == "immortalwrt" ]]; then
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块"
-PACKAGES="$PACKAGES  kmod-drm-gem-shmem-helper kmod-drm-lima  kmod-drm-panfrost kmod-drm-rockchip"
+PACKAGES="$PACKAGES  kmod-drm-gem-shmem-helper kmod-drm-panfrost" #kmod-drm-lima kmod-drm-rockchip
 fi
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
 # USB驱动
