@@ -61,6 +61,9 @@ echo "================================================================="
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
 #========== 定义所需安装的包列表 ==========#
 PACKAGES=""
+#========== 删除插件包 ==========#
+PACKAGES="$PACKAGES -luci-app-cpufreq -dnsmasq"
+#========== 添加插件包 ==========#
 PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util"
 PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-zstd"
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
@@ -96,8 +99,6 @@ if $INCLUDE_DOCKER; then
     PACKAGES="$PACKAGES docker-compose luci-i18n-dockerman-zh-cn"
     echo "添加Package: luci-i18n-dockerman-zh-cn"
 fi
-#========== 删除插件包 ==========#
-PACKAGES="$PACKAGES -luci-app-cpufreq"
 
 #=============== 开始打包镜像 ===============#
 echo "============================= 默认插件 ============================="
