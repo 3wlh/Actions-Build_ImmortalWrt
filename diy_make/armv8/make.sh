@@ -11,6 +11,7 @@ echo "============================= 下载脚本 ============================="
 Script "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh" \
 "Download Segmentation Check Replace Kmods Repositories Passwall"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
+
 #========== 添加首次启动时运行的脚本 ==========#
 [[ -d "files/etc/uci-defaults" ]] || mkdir -p "files/etc/uci-defaults"
 find "$(pwd)/files/" -maxdepth 1 -type f -name "*" -exec mv {} "$(pwd)/files/etc/uci-defaults/" \;
@@ -22,24 +23,22 @@ echo "Download_Path: $(pwd)/packages/diy_packages"
 sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki' "repositories.conf"
 if [[ "${BRANCH}" == "openwrt" ]]; then
-    Passwall "aarch64_generic"
-    Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}插件"
+Passwall "aarch64_generic"
+Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
 "luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn luci-app-argon-config luci-i18n-argon-config-zh-cn luci-theme-argon"
-    Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/packages/" \
+Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/packages/" \
 "ddns-scripts_aliyun "
 fi
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 # Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
 # "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
+
 echo "=========================== 查看下载插件 ==========================="
 ls $(pwd)/packages/diy_packages
+
 echo "============================= 检查缓存 ============================="
-#if [[ "${BRANCH}"="openwrt" ]]; then
-    #echo "========== 修改仓库 =========="
-    #echo "$(date '+%Y-%m-%d %H:%M:%S') - 修改插件仓库为：immortalwrt"
-    #Repositories "downloads.immortalwrt.org"
-#fi
 if [[ $(find "$(pwd)/dl" -type f 2>/dev/null | wc -l) -gt 0 ]]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 正在检查缓存插件："
     Check
@@ -49,6 +48,7 @@ fi
 echo "============================= 镜像信息 ============================="
 echo "路由器型号: $PROFILE"
 echo "固件大小: $ROOTFS_PARTSIZE"
+
 #========== 创建自定义配置文件 ==========# 
 mkdir -p  /home/build/immortalwrt/files/etc/config
 cat << EOF > /home/build/immortalwrt/files/etc/config/diy-settings
@@ -59,27 +59,35 @@ EOF
 echo "========================= 查看自定义配置 ========================="
 cat /home/build/immortalwrt/files/etc/config/diy-settings
 echo "================================================================="
+
 #=============== 开始构建镜像 ===============#
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
 #========== 定义所需安装的包列表 ==========#
 PACKAGES=""
 #========== 删除插件包 ==========#
-PACKAGES="$PACKAGES -luci-app-cpufreq -dnsmasq"
-#========== 添加插件包 ==========#
-PACKAGES="$PACKAGES bash busybox uci luci uhttpd luci-base opkg curl openssl-util coremark ds-lite e2fsprogs htop"
-# 内核驱动
-PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core" # kmod-input-core kmod-thermal
-PACKAGES="$PACKAGES kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-dma-helper kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm"
-if [[ "${BRANCH}" == "immortalwrt" ]]; then
-echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块"
-PACKAGES="$PACKAGES  kmod-drm-gem-shmem-helper kmod-drm-panfrost" #kmod-drm-lima:kmod-drm-panfrost kmod-drm-rockchip:kmod-drm-dma-helper
-# else
+PACKAGES="$PACKAGES -luci-app-cpufreq"
+if [[ "${BRANCH}" == "openwrt" ]]; then
+PACKAGES="$PACKAGES -dnsmasq"
 fi
-PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
+#========== 添加内核驱动 ==========#
+PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core" # kmod-input-core kmod-thermal
+PACKAGES="$PACKAGES kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm"
+if [[ "${BRANCH}" == "immortalwrt" ]]; then
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块..."
+PACKAGES="$PACKAGES kmod-drm-gem-shmem-helper kmod-drm-panfrost kmod-drm-rockchip" #kmod-drm-lima:kmod-drm-panfrost kmod-drm-rockchip:kmod-drm-dma-helper
+else
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块..."
+PACKAGES="$PACKAGES kmod-drm-dma-helper"
+fi
+#========== 添加插件包 ==========#
+PACKAGES="$PACKAGES busybox uci luci uhttpd opkg curl openssl-util ds-lite e2fsprogs lsblk resolveip swconfig zram-swap"
+PACKAGES="$PACKAGES bash luci-base nano wget-ssl openssh-sftp-server coremark htop"
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 # PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 # 23.05.4 luci-i18n-opkg-zh-cn
+
+
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
@@ -98,7 +106,7 @@ PACKAGES="$PACKAGES luci-app-v2ray-server"
 PACKAGES="$PACKAGES sunpanel luci-app-sunpanel"
 PACKAGES="$PACKAGES nikki luci-app-nikki luci-i18n-nikki-zh-cn"
 # DDNS解析
-PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod bind-host" #knot-host
+PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudflare ddns-scripts-dnspod bind-host" #knot-host drill bind-host
 # 增加几个必备组件 方便用户安装iStore
 # PACKAGES="$PACKAGES fdisk"
 # PACKAGES="$PACKAGES script-utils"
