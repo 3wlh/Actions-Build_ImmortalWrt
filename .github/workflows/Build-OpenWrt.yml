@@ -206,7 +206,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
-        if: steps.images.outputs.cache == 'delete'
+        if: steps.building.outputs.cache == 'delete'
         run: |
           # List caches for current repository
           gh cache list
@@ -216,7 +216,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Reload again Cache
-        if: steps.images.outputs.cache == 'delete'
+        if: steps.building.outputs.cache == 'delete'
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
