@@ -62,7 +62,7 @@ PACKAGES="$PACKAGES coremark ds-lite e2fsprogs htop kmod-drm-rockchip kmod-lib-z
 PACKAGES="$PACKAGES lsblk nano resolveip swconfig wget-ssl zram-swap openssh-sftp-server"
 # USB驱动
 # PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
-PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
+# PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 # 23.05.4 luci-i18n-opkg-zh-cn
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
