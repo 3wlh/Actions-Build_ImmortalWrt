@@ -6,7 +6,7 @@ i18n="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*luci-'${2}'.*\.i
 Download_url=(${Zip_url} ${luci_url} ${i18n})
 for url in "${Download_url[@]}"; do
 echo "Downloading ${url}"
-if [[ "$(du -b "$(pwd)/packages/diy_packages/$(basename ${1})" 2>/dev/null | awk '{print $1}')" -ge "10000" ]]; then
+if [[ "$(du -b "$(pwd)/packages/diy_packages/$(basename ${url})" 2>/dev/null | awk '{print $1}')" -ge "10000" ]]; then
 	echo "######################################################################## 100.0%"
 else	
 	find $(pwd)/packages/diy_packages/ -type f -name "$(echo "$(basename ${url})")" -exec rm -f {} \;
