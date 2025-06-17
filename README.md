@@ -2,8 +2,8 @@
 ## 如何使用?
 [ImmortalWrt Image Builder 使用说明](https://github.com/1715173329/blog/issues/8) <br><br>
 [OpenWrt Image Builder 使用说明](https://openwrt.org/docs/guide-user/additional-software/imagebuilder) <br><br>
-您可以在 [此处](https://hub.docker.com/r/immortalwrt/imagebuilder/tags) 获取所有可用的ImmortalWrt tags
-您可以在 [此处](https://hub.docker.com/r/openwrt/imagebuilder/tags) 获取所有可用的OpenWrt tags
+您可以在 [此处](https://hub.docker.com/r/immortalwrt/imagebuilder/tags) 获取所有可用的ImmortalWrt tags <br><br>
+您可以在 [此处](https://hub.docker.com/r/openwrt/imagebuilder/tags) 获取所有可用的OpenWrt tags <br><br>
 ## 如何查询都有哪些插件?
 #### ImmortalWrt：aarch64_generic
 [ImmortalWrt luci](https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/) <br><br>
