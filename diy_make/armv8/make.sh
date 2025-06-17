@@ -77,6 +77,7 @@ fi
 #========== 添加内核驱动 ==========#
 PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core" # kmod-input-core kmod-thermal
 PACKAGES="$PACKAGES kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm"
+PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic" # USB驱动
 if [[ "${BRANCH}" == "immortalwrt" ]]; then
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块..."
 PACKAGES="$PACKAGES kmod-drm-gem-shmem-helper kmod-drm-panfrost kmod-drm-rockchip" #kmod-drm-lima:kmod-drm-panfrost kmod-drm-rockchip:kmod-drm-dma-helper
@@ -94,8 +95,7 @@ fi
 #========== 添加插件包 ==========#
 PACKAGES="$PACKAGES busybox uci luci uhttpd opkg curl openssl-util ds-lite e2fsprogs lsblk resolveip swconfig zram-swap"
 PACKAGES="$PACKAGES bash luci-base nano wget-ssl openssh-sftp-server coremark htop"
-# USB驱动
-PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
+
 # PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
@@ -123,8 +123,8 @@ PACKAGES="$PACKAGES luci-i18n-ddns-zh-cn ddns-scripts_aliyun ddns-scripts-cloudf
 # PACKAGES="$PACKAGES luci-i18n-samba4-zh-cn"
 # 添加Docker插件
 if $INCLUDE_DOCKER; then
-    PACKAGES="$PACKAGES docker-compose luci-i18n-dockerman-zh-cn"
-    echo "添加Package: luci-i18n-dockerman-zh-cn"
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加docker插件..." 
+PACKAGES="$PACKAGES docker dockerd docker-compose luci-i18n-dockerman-zh-cn"
 fi
 
 #=============== 开始打包镜像 ===============#
