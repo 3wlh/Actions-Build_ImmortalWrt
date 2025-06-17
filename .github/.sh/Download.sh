@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Downloading ${1}"
-if [[ -f "$(pwd)/packages/diy_packages/$(basename ${1})" ]]; then
+if [[ "$(du -b $(pwd)/packages/diy_packages/$(basename ${1}) 2>/dev/null | awk '{print $1}')" -ge "512" ]]; then
     echo "######################################################################## 100.0%"
 else
     find $(pwd)/packages/diy_packages/ -type f -name "$(echo "$(basename ${1})" | cut -d "_" -f 1 )*.ipk" -exec rm -f {} \;
