@@ -14,7 +14,7 @@
 [ImmortalWrt luci](https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10-SNAPSHOT/packages/x86_64/luci/) <br><br>
 [ImmortalWrt base](https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10-SNAPSHOT/packages/x86_64/base/) <br><br>
 [ImmortalWrt packages](https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10-SNAPSHOT/packages/x86_64/packages/) <br><br>
-[ImmortalWrt kmods](https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10-SNAPSHOT/targets/x86/64/armv8/kmods/) <br><br>
+[ImmortalWrt kmods](https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10-SNAPSHOT/targets/x86/64/kmods/) <br><br>
 #### OpenWrt：aarch64_generic
 [OpenWrt luci](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/) <br><br>
 [OpenWrt base](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/packages/aarch64_generic/base/) <br><br>
@@ -24,7 +24,7 @@
 [OpenWrt luci](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/packages/x86_64/luci/) <br><br>
 [OpenWrt base](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/packages/x86_64/base/) <br><br>
 [OpenWrt packages](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/packages/x86_64/packages/) <br><br>
-[OpenWrt kmods](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/targets/x86/64/armv8/kmods/) <br><br>
+[OpenWrt kmods](https://mirrors.sjtug.sjtu.edu.cn/openwrt/releases/24.10-SNAPSHOT/targets/x86/64/kmods/) <br><br>
 # 鸣谢
 ### https://github.com/immortalwrt
 ### https://github.com/openwrt
