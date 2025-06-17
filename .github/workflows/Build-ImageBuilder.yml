@@ -158,6 +158,7 @@ jobs:
             ${{ env.PATH_CACHE }}/image/${{ env.CACHE_IMAGE }} \
             ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }}
           fi
+          chmod -R 777 "${{ env.PATH_CACHE }}"
           
       - name: SSH connection to Actions
         if: env.SSH == 'true'
@@ -182,8 +183,8 @@ jobs:
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }} /bin/bash ${{ env.builder }}/make.sh
-          #cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
-          
+          cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
+          cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_ENV
           # exit 1
           
       - name: Upload bin directory
