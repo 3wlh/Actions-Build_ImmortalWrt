@@ -1,0 +1,132 @@
+name: Build_C
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: |
+          选择 OpenWrt 分支
+        required: true
+        default: "immortalwrt"
+        type: choice
+        options:
+          - immortalwrt
+          - openwrt
+          
+      image:
+        description: |
+          选择 OpenWrt 镜像
+        required: true
+        default: "rockchip-armv8"
+        type: choice
+        options:
+          - x86-64
+          - armsr-armv8
+          - rockchip-armv8
+          
+      version:
+        description: |
+          选择 OpenWrt 版本
+        required: true
+        default: "24.10.0"
+        type: choice
+        options:
+          - "24.10-SNAPSHOT"
+          - "24.10.1"
+          - "24.10.0"
+          - "23.05.5"
+      
+      profile:
+        description: |
+          输入 软路由型号 可选值如下：
+        required: true
+        default: 'friendlyarm_nanopi-r6s'
+        type: choice
+        options:
+          - friendlyarm_nanopi-r6s
+          - xunlong_orangepi-5-plus
+          
+      rootfs_partsize:
+        description: |
+          设置软件包大小 单位(MB)
+        required: true
+        default: '1024'
+        type: choice
+        options:
+          - 512
+          - 1024
+          - 2048
+          - 4096
+          
+      docker:
+        description: |
+          是否编译 Docker 插件
+        required: true
+        default: false
+        type: boolean
+        
+      enable_pppoe:
+        description: |
+          是否使用PPPoE协议?
+        required: true
+        default: true
+        type: boolean
+        
+      pppoe_account:
+        description: |
+          是否添加 宽带账号? (可留空)
+        required: false
+      pppoe_password:
+        description: |
+          是否添加 宽带密码? (可留空)
+        required: false
+
+env:
+  SSH: false
+  UPLOAD_BIN_DIR: false
+  PATH_CACHE: /tmp/.cache
+  CACHE_IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
+
+jobs:
+  Build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Configure docker image
+        run: |
+          if [[ "${{ inputs.version }}" =~ "SNAPSHOT" || "${{ inputs.branch }}" == "openwrt" ]]; then
+            IMAGE=${{ inputs.image }}-${{ inputs.version }}
+          else
+            IMAGE=${{ inputs.image }}-openwrt-${{ inputs.version }}
+          fi
+          if [[ "${{ inputs.branch }}" == "openwrt" ]]; then
+            echo "builder=/builder" >> $GITHUB_ENV
+          else
+            echo "builder=/home/build/immortalwrt" >> $GITHUB_ENV
+          fi
+          echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
+          echo "CACHE_KEY=${{ inputs.branch }}-${IMAGE}-$(echo "${IMAGE}" | md5sum | awk '{print $1}')" >> $GITHUB_ENV
+            
+      - name: Configure environment variables
+        run: |
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          echo "time=$(date "+%Y.%m.%d-%H%M%S")" >> $GITHUB_ENV
+          if [[ "${{ inputs.image }}" =~ "x86-64" || "${{ inputs.image }}" =~ "armsr" ]]; then
+            echo "profile=generic" >> $GITHUB_ENV
+          else
+            echo "profile=${{ inputs.profile }}" >> $GITHUB_ENV
+          fi
+          [[ "${{ inputs.docker }}" == "true" ]] && echo "docker=-Docker" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" =~ "armv8"  ]] && echo "arch=armv8" >> $GITHUB_ENV
+          [[ "${{ inputs.image }}" =~ "x86-64"  ]] && echo "arch=x86-64" >> $GITHUB_ENV
+          echo "device=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV    
+   
+      - name: Query Cleanup Cache
+        run: |
+          # List caches for current repository
+          gh cache list
+          # Delete a cache by key
+          [[ "$(gh cache list)" =~ "${{ env.CACHE_KEY }}"  ]] && echo okk
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
