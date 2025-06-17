@@ -213,7 +213,7 @@ jobs:
           # List caches for current repository
           gh cache list
           # Delete a cache by key
-          gh cache delete ${{ inputs.image }}-${{ inputs.version }}
+          gh cache delete ${{ env.CACHE_KEY }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
