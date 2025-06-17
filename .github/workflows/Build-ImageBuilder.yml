@@ -182,7 +182,8 @@ jobs:
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }} /bin/bash ${{ env.builder }}/make.sh
-          cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
+          #cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
+          
           # exit 1
           
       - name: Upload bin directory
@@ -207,7 +208,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
-        if: steps.building.outputs.cache == 'delete'
+        if: steps.building.outputs.del_cache == 'success'
         run: |
           # List caches for current repository
           gh cache list
@@ -219,7 +220,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Reload again Cache
-        if: steps.building.outputs.cache == 'delete'
+        if: steps.building.outputs.del_cache == 'success'
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
