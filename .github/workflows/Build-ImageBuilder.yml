@@ -184,7 +184,7 @@ jobs:
             -e ROOTFS_PARTSIZE=${{ inputs.rootfs_partsize }} \
             ${{ inputs.branch }}/imagebuilder:${{ env.IMAGE }} /bin/bash ${{ env.builder }}/make.sh
           cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_OUTPUT
-          cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_ENV
+          #cat "${{ github.workspace }}/${{ inputs.image }}/bin/.bashrc" 2>/dev/null >> $GITHUB_ENV
           # exit 1
           
       - name: Upload bin directory
@@ -209,7 +209,7 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
       
       - name: Query Cleanup Cache
-        if: steps.building.outputs.del_cache == 'success'
+        if: steps.building.outputs.cache == 'delete'
         run: |
           # List caches for current repository
           gh cache list
@@ -221,7 +221,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Reload again Cache
-        if: steps.building.outputs.del_cache == 'success'
+        if: steps.building.outputs.cache == 'delete'
         uses: actions/cache@main
         with:
           path: ${{ env.PATH_CACHE }}
