@@ -96,8 +96,6 @@ fi
 PACKAGES="$PACKAGES busybox uci luci uhttpd opkg curl openssl-util ds-lite e2fsprogs lsblk resolveip swconfig zram-swap"
 PACKAGES="$PACKAGES bash luci-base nano wget-ssl openssh-sftp-server coremark htop"
 
-# PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
-
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
