@@ -17,7 +17,7 @@ while IFS= read -r LINE; do
     else
         # 删除 GitHub 缓存
         echo "del_cache=success" >> "$(pwd)/bin/.bashrc"
-        rm -rf "$(pwd)/dl"
+        rm -rf "$(pwd)/dl/*"
         echo -e "删除所有缓存插件！" 
         break
     fi
