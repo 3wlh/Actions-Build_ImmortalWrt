@@ -164,7 +164,7 @@ jobs:
         if: env.SSH == 'true'
         uses: mxschmitt/action-tmate@master
         
-      - name: Building ${{ env.device }} ImmortalWrt
+      - name: Building ${{ env.device }} ${{ inputs.branch }}
         id: building
         run: |
           docker run --rm -i \

@@ -16,4 +16,4 @@ else
     echo "cache=delete" >> "$(pwd)/bin/.bashrc"
 fi
 done
-find $(pwd)/packages/diy_packages/ -type f -name "$(echo "$(basename ${Zip_url})")" -exec unzip {} -d "$(pwd)/packages/diy_packages/" \;
+find $(pwd)/packages/diy_packages/ -type f -name "$(echo "$(basename ${Zip_url})")" -exec unzip -oq {} -d "$(pwd)/packages/diy_packages/" \;
