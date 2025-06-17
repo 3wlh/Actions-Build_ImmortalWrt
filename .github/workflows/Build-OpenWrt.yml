@@ -1,4 +1,4 @@
-name: Build OpenWrt Image Builder
+name: Build_ImageBuilder
 on:
   workflow_dispatch:
     inputs:
@@ -82,8 +82,7 @@ on:
 
 env:
   SSH: false
-  UPLOAD_BIN_DIR: true
-  
+  UPLOAD_BIN_DIR: false
   PATH_CACHE: /tmp/.cache
   CACHE_IMAGE: imagebuilder:${{ inputs.image }}-${{ inputs.version }}.tar
 
