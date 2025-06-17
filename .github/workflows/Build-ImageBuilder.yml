@@ -212,7 +212,9 @@ jobs:
           # List caches for current repository
           gh cache list
           # Delete a cache by key
-          gh cache delete ${{ env.CACHE_KEY }}
+          if [[ "$(gh cache list)" =~ "${{ env.CACHE_KEY }}"  ]]; then
+            gh cache delete ${{ env.CACHE_KEY }}
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
