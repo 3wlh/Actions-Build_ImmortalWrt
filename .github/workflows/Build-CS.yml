@@ -123,6 +123,7 @@ jobs:
           echo "device=$(echo ${{ inputs.image }} | sed 's/-openwrt//' | sed 's/-armv8//')" >> $GITHUB_ENV    
    
       - name: Query Cleanup Cache
+        if: $(gh cache list) =~ '${{ env.CACHE_KEY }}'
         run: |
           # List caches for current repository
           gh cache list
