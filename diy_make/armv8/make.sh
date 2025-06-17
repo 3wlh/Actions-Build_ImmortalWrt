@@ -24,7 +24,11 @@ sed -i "s/option check_signature/# option check_signature/g" "repositories.conf"
 sed -i '1a src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki' "repositories.conf"
 if [[ "${BRANCH}" == "openwrt" ]]; then
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}插件"
-Passwall "aarch64_generic"
+if [[ "$(echo ${VERSION} |  cut -d '.' -f 1 )" -ge "24" ]]; then
+    Passwall "aarch64_generic" "24.10"
+else
+    Passwall "aarch64_generic" "19.07"
+fi
 Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
 "luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn luci-app-argon-config luci-i18n-argon-config-zh-cn luci-theme-argon"
 Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/packages/" \
@@ -62,6 +66,7 @@ echo "================================================================="
 
 #=============== 开始构建镜像 ===============#
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 系统Version:${VERSION}..."
 #========== 定义所需安装的包列表 ==========#
 PACKAGES=""
 #========== 删除插件包 ==========#
@@ -75,9 +80,16 @@ PACKAGES="$PACKAGES kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-kms
 if [[ "${BRANCH}" == "immortalwrt" ]]; then
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块..."
 PACKAGES="$PACKAGES kmod-drm-gem-shmem-helper kmod-drm-panfrost kmod-drm-rockchip" #kmod-drm-lima:kmod-drm-panfrost kmod-drm-rockchip:kmod-drm-dma-helper
+PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
 else
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块..."
 PACKAGES="$PACKAGES kmod-drm-dma-helper"
+PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-nat"
+fi
+if [[ "$(echo ${VERSION} |  cut -d '.' -f 1 )" -ge "24" ]]; then
+PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
+else
+PACKAGES="$PACKAGES luci-i18n-opkg-zh-cn"
 fi
 #========== 添加插件包 ==========#
 PACKAGES="$PACKAGES busybox uci luci uhttpd opkg curl openssl-util ds-lite e2fsprogs lsblk resolveip swconfig zram-swap"
@@ -85,8 +97,6 @@ PACKAGES="$PACKAGES bash luci-base nano wget-ssl openssh-sftp-server coremark ht
 # USB驱动
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic"
 # PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-fullcone kmod-nft-nat"
-# 23.05.4 luci-i18n-opkg-zh-cn
-
 
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 

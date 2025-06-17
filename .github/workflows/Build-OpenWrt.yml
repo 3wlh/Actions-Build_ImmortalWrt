@@ -175,6 +175,7 @@ jobs:
             -v "${{ github.workspace }}/diy_files/${{ env.arch }}/${{ env.profile }}:${{ env.builder }}/files" \
             -e PROFILE=${{ env.profile }} \
             -e BRANCH=${{ inputs.branch }} \
+            -e VERSION=${{ inputs.version }} \
             -e INCLUDE_DOCKER=${{ inputs.docker }} \
             -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
             -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \

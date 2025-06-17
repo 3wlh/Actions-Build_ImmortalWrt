@@ -1,8 +1,8 @@
 #!/bin/bash
 Data="$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/releases/latest)"
 Zip_url="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*passwall_packages_ipk_'${1}'.zip"' | cut -d '"' -f 4)"
-luci_url="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*luci-19.07.*\.ipk"' | head -1 | cut -d '"' -f 4)"
-i18n="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*luci-19.07.*\.ipk"' | tail -1 | cut -d '"' -f 4)"
+luci_url="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*luci-'${2}'.*\.ipk"' | head -1 | cut -d '"' -f 4)"
+i18n="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*luci-'${2}'.*\.ipk"' | tail -1 | cut -d '"' -f 4)"
 Download_url=(${Zip_url} ${luci_url} ${i18n})
 for url in "${Download_url[@]}"; do
 echo "Downloading ${url}"
