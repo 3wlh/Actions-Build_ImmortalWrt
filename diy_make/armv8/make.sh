@@ -86,6 +86,7 @@ else
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 添加${BRANCH}内核模块..."
 PACKAGES="$PACKAGES kmod-drm-dma-helper"
 PACKAGES="$PACKAGES kmod-nft-offload kmod-nft-nat"
+PACKAGES="$PACKAGES luci-lib-ipkg"
 fi
 if [[ "$(echo ${VERSION} |  cut -d '.' -f 1 )" -ge "24" ]]; then
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
@@ -95,6 +96,8 @@ fi
 #========== 添加插件包 ==========#
 PACKAGES="$PACKAGES busybox uci luci uhttpd opkg curl openssl-util ds-lite e2fsprogs lsblk resolveip swconfig zram-swap"
 PACKAGES="$PACKAGES bash luci-base nano wget-ssl openssh-sftp-server coremark htop"
+
+
 
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
