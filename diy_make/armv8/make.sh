@@ -75,7 +75,7 @@ if [[ "${BRANCH}" == "openwrt" ]]; then
 PACKAGES="$PACKAGES -dnsmasq"
 fi
 #========== 添加内核驱动 ==========#
-PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core" # kmod-input-core kmod-thermal
+PACKAGES="$PACKAGES kmod-tcp-bbr kmod-lib-zstd kmod-thermal kmod-input-core kmod-gpio-cascade" # kmod-input-core kmod-thermal
 PACKAGES="$PACKAGES kmod-drm kmod-drm-buddy kmod-drm-display-helper kmod-drm-kms-helper kmod-drm-mipi-dbi kmod-drm-ttm"
 PACKAGES="$PACKAGES kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ohci kmod-usb-storage kmod-scsi-generic" # USB驱动
 if [[ "${BRANCH}" == "immortalwrt" ]]; then
@@ -94,10 +94,9 @@ else
 PACKAGES="$PACKAGES luci-i18n-opkg-zh-cn"
 fi
 #========== 添加插件包 ==========#
+PACKAGES="$PACKAGES hub-ctrl uhubctl"
 PACKAGES="$PACKAGES busybox uci luci uhttpd opkg curl openssl-util ds-lite e2fsprogs lsblk resolveip swconfig zram-swap"
 PACKAGES="$PACKAGES bash luci-base nano wget-ssl openssh-sftp-server coremark htop"
-
-
 
 PACKAGES="$PACKAGES luci-i18n-package-manager-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-base-zh-cn" 
