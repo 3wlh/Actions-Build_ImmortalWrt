@@ -1,4 +1,4 @@
-name: Build_ImageBuilder
+ name: Build_ImageBuilder
 on:
   workflow_dispatch:
     inputs:
@@ -27,13 +27,12 @@ on:
         description: |
           选择 OpenWrt 版本
         required: true
-        default: "24.10.0"
+        default: "24.10-SNAPSHOT"
         type: choice
         options:
           - "24.10-SNAPSHOT"
           - "24.10.1"
           - "24.10.0"
-          - "24.10"
           - "23.05.5"
       
       profile:
