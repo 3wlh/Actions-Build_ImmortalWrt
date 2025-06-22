@@ -57,6 +57,16 @@ on:
           - 1024
           - 2048
           - 4096
+      
+      network_lan:
+        description: |
+          设置固件IP地址
+        required: true
+        default: '10.10.10.254'
+        type: choice
+        options:
+          - "10.10.10.254"
+          - "192.168.100.1"
           
       docker:
         description: |
@@ -180,6 +190,7 @@ jobs:
             -e BRANCH=${{ inputs.branch }} \
             -e VERSION=${{ inputs.version }} \
             -e INCLUDE_DOCKER=${{ inputs.docker }} \
+            -e NETWORK_LAN=${{ inputs.network_lan }} \
             -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
             -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
             -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \

@@ -56,7 +56,7 @@ echo "固件大小: $ROOTFS_PARTSIZE"
 #========== 创建自定义配置文件 ==========# 
 mkdir -p "$(pwd)/files/etc/config"
 cat << EOF > "$(pwd)/files/etc/config/diy-settings"
-settings_lan=${IP_LAN}
+settings_lan=${NETWORK_LAN}
 enable_pppoe=${ENABLE_PPPOE}
 pppoe_account=${PPPOE_ACCOUNT}
 pppoe_password=${PPPOE_PASSWORD}
