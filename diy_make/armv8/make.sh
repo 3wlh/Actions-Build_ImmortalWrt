@@ -61,12 +61,12 @@ pppoe_account=${PPPOE_ACCOUNT}
 pppoe_password=${PPPOE_PASSWORD}
 EOF
 echo "========================= 查看自定义配置 ========================="
-cat /home/build/immortalwrt/files/etc/config/diy-settings
+cat "$(pwd)/files/etc/config/diy-settings"
 echo "================================================================="
 
 #=============== 开始构建镜像 ===============#
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
-echo "$(date '+%Y-%m-%d %H:%M:%S') - 系统Version:${VERSION}..."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 系统Version: ${VERSION} ..."
 #========== 定义所需安装的包列表 ==========#
 PACKAGES=""
 #========== 删除插件包 ==========#
@@ -135,10 +135,10 @@ echo "=========================== 编译添加插件 ===========================
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 编译添加插件："
 echo "$PACKAGES"
 echo "============================ 编辑Config ============================"
-Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
-Replace "CONFIG_TARGET_EXT4_JOURNAL"
 Replace "CONFIG_TARGET_KERNEL_PARTSIZE" "32"
 Replace "CONFIG_TARGET_ROOTFS_PARTSIZE" "${ROOTFS_PARTSIZE}"
+Replace "CONFIG_TARGET_ROOTFS_EXT4FS"
+Replace "CONFIG_TARGET_EXT4_JOURNAL"
 cp -f "$(pwd)/.config" "$(pwd)/bin/buildinfo.config"
 #========== kmods版本 ==========#
 echo "========== kmods版本 =========="

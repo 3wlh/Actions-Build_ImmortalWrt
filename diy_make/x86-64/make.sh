@@ -52,18 +52,19 @@ echo "============================= 镜像信息 ============================="
 echo "路由器型号: $PROFILE"
 echo "固件大小: $ROOTFS_PARTSIZE"
 #========== 创建自定义配置文件 ==========# 
-mkdir -p  /home/build/immortalwrt/files/etc/config
-cat << EOF > /home/build/immortalwrt/files/etc/config/diy-settings
+mkdir -p "$(pwd)/files/etc/config"
+cat << EOF > "$(pwd)/files/etc/config/diy-settings"
 enable_pppoe=${ENABLE_PPPOE}
 pppoe_account=${PPPOE_ACCOUNT}
 pppoe_password=${PPPOE_PASSWORD}
 EOF
 echo "========================= 查看自定义配置 ========================="
-cat /home/build/immortalwrt/files/etc/config/diy-settings
+cat "$(pwd)/files/etc/config/diy-settings"
 echo "================================================================="
 
 #=============== 开始构建镜像 ===============#
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建镜像..."
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 系统Version: ${VERSION} ..."
 #========== 定义所需安装的包列表 ==========#
 PACKAGES=""
 #========== 删除插件包 ==========#
@@ -150,7 +151,7 @@ echo "========== kmods版本 =========="
 Kmods
 echo "============================= 打包镜像 ============================="
 cp -f "$(pwd)/repositories.conf" "$(pwd)/bin/repositories.conf"
-make image PROFILE=$PROFILE PACKAGES="$PACKAGES1" FILES="/home/build/immortalwrt/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
+make image PROFILE=$PROFILE PACKAGES="$PACKAGES1" FILES="$(pwd)/files" ROOTFS_PARTSIZE=$ROOTFS_PARTSIZE
 echo "============================= 构建结果 ============================="
 if [ $? -ne 0 ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - 打包镜像失败!"
