@@ -7,11 +7,13 @@ echo "Starting 99-custom.sh at $(date '+%Y-%m-%d %H:%M:%S')" >> $LOGFILE
 # 检查配置文件diy-settings是否存在
 SETTINGS_FILE="/etc/config/diy-settings"
 if [ -f "$SETTINGS_FILE" ]; then
-   # 读取pppoe信息($enable_pppoe、$pppoe_account、$pppoe_password)
+   # 读取diy-settings信息
    . "$SETTINGS_FILE"
 fi
 #====================设置LAN口IP====================
-uci set network.lan.ipaddr='10.10.100.1'
+if [ -n "${settings_lan}" ]; then
+uci set network.lan.ipaddr="${settings_lan}"
+fi
 uci commit network
 
 #==========================Dropbear==========================
