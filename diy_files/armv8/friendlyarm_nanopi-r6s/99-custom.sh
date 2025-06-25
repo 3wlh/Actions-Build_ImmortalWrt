@@ -76,10 +76,8 @@ uci set firewall.@zone[1].input='ACCEPT'
 uci commit firewall
 
 #==========================Network==========================
-# 读取固件信息
-. "/etc/openwrt_release"
 # 更改 eth1 为 WAN 口
-if [[ "${DISTRIB_ID}" == "ImmortalWrt" ]]; then
+if [[ "$(source "/etc/os-release";echo ${ID})" == "immortalwrt" ]]; then
 # 更改 eth1 为 WAN 口
 uci del_list network.@device[0].ports="eth2"
 uci add_list network.@device[0].ports="eth1"
