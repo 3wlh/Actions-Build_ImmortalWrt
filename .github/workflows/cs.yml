@@ -29,4 +29,4 @@ jobs:
         
       - name: Configure docker image
         run: |
-          sh ${{ github.workspace }}/.github/.sh/
+          sh ${{ github.workspace }}/.github/.sh/echo.sh
