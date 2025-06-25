@@ -30,4 +30,4 @@ jobs:
       - name: Configure docker image
         run: |
           chmod +x ${{ github.workspace }}/.github/.sh/echo.sh
-          sh ${{ github.workspace }}/.github/.sh/echo.sh
+          ./${{ github.workspace }}/.github/.sh/echo.sh
