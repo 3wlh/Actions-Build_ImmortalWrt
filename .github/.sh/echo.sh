@@ -1,2 +1,2 @@
 #!/bin/bash
-echo ${github.workspace}
+echo ${{ github.workspace }}

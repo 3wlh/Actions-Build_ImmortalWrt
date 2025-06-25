@@ -31,4 +31,4 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/.github/.sh/echo.sh
           ls ${{ github.workspace }}/.github/.sh/
-          ${{ github.workspace }}/.github/.sh/echo.sh
+          exec ${{ github.workspace }}/.github/.sh/echo.sh
