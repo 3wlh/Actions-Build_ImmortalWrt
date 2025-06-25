@@ -56,7 +56,6 @@ on:
           - 512
           - 1024
           - 2048
-          - 4096
       
       network_lan:
         description: |
@@ -176,7 +175,7 @@ jobs:
         if: env.SSH == 'true'
         uses: mxschmitt/action-tmate@master
         
-      - name: Building ${{ env.device }} ${{ inputs.branch }}
+      - name: Building ${{ inputs.branch }} ${{ env.device }}
         id: building
         run: |
           docker run --rm -i \
@@ -244,8 +243,8 @@ jobs:
         if: steps.images.outputs.status == 'success'
         uses: softprops/action-gh-release@master
         with:
-          tag_name: GitHub-Actions_${{ env.device }}-${{ env.profile }}
-          name: ${{ env.device }}-${{ env.profile }}${{ env.docker }}
+          tag_name: GitHub-Actions_${{ env.time }}
+          name: ${{ inputs.branch }}-${{ env.device }}_${{ env.profile }}
           body_path: info.md
           files: |
             ${{ github.workspace }}/*.img.gz
