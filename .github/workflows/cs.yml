@@ -31,4 +31,4 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/.github/.sh/echo.sh
           ls ${{ github.workspace }}/.github/.sh/
-          fork ${{ github.workspace }}/.github/.sh/echo.sh
+          ${{ github.workspace }}/.github/.sh/echo.sh
