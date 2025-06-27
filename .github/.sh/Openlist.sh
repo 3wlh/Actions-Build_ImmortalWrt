@@ -11,6 +11,6 @@ else
     # 删除 GitHub 缓存
     echo "cache=delete" >> "$(pwd)/bin/.bashrc"
 fi
-find $(pwd)/packages/diy_packages/ -type f -name "$(basename ${gz_url})" -exec tar -zxvf {} -C "$(pwd)/packages/diy_packages/" \;
+find $(pwd)/packages/diy_packages/ -type f -name "$(basename ${gz_url})" -exec tar -zxf {} -C "$(pwd)/packages/diy_packages/" \;
 find $(pwd)/packages/diy_packages/packages_ci -type f -name "*.[ia]pk" -exec mv -f {} "$(pwd)/packages/diy_packages/" \;
 rm -rf $(pwd)/packages/diy_packages/packages_ci
