@@ -3,7 +3,7 @@
 function Script(){
 Script_NAME=(${2})
 for Script in "${Script_NAME[@]}"; do
-    curl -# --fail "${1}/${Script}.sh" -o "/bin/${Script}" && \
+    curl -# -L --fail "${1}/${Script}.sh" -o "/bin/${Script}" && \
     chmod 755 "/bin/${Script}"
  done
 }
