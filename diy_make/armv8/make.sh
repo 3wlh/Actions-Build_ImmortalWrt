@@ -9,7 +9,7 @@ for Script in "${Script_NAME[@]}"; do
 }
 echo "============================= 下载脚本 ============================="
 Script "https://raw.githubusercontent.com/3wlh/Actions-Build_ImmortalWrt/refs/heads/main/.github/.sh" \
-"Download Segmentation Check Replace Kmods Repositories Passwall"
+"Download Segmentation Check Replace Kmods Repositories Passwall Openlist"
 find . -maxdepth 1 -type f -name "repositories.conf" -exec cp {} "$(pwd)/packages/" \;
 
 #========== 添加首次启动时运行的脚本 ==========#
@@ -29,6 +29,7 @@ if [[ "$(echo ${VERSION} |  cut -d '.' -f 1 )" -ge "24" ]]; then
 else
     Passwall "aarch64_generic" "19.07"
 fi
+Openlist "aarch64_generic"
 Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
 "luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn luci-app-argon-config luci-i18n-argon-config-zh-cn luci-theme-argon"
 Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/packages/" \
@@ -110,7 +111,8 @@ PACKAGES="$PACKAGES luci-i18n-passwall-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-homeproxy-zh-cn"
 # PACKAGES="$PACKAGES luci-app-openclash"
 
-PACKAGES="$PACKAGES luci-i18n-alist-zh-cn"
+# PACKAGES="$PACKAGES luci-i18n-alist-zh-cn"
+PACKAGES="$PACKAGES openlist luci-app-openlist luci-i18n-openlist-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-ttyd-zh-cn"
 PACKAGES="$PACKAGES luci-app-unishare"
 PACKAGES="$PACKAGES luci-app-v2ray-server"
