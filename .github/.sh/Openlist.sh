@@ -1,3 +1,4 @@
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 下载 luci-app-openlist ..."
 Data="$(curl -s https://api.github.com/repos/sbwml/luci-app-openlist/releases/latest)"
 gz_url="$(echo "${Data}" | grep -Eo '"browser_download_url":\s*".*openwrt-24.10-'${1}'.tar.gz"' | cut -d '"' -f 4)"
 echo "Downloading ${gz_url}"
