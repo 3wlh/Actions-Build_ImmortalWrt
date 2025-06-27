@@ -29,12 +29,12 @@ if [[ "$(echo ${VERSION} |  cut -d '.' -f 1 )" -ge "24" ]]; then
 else
     Passwall "aarch64_generic" "19.07"
 fi
-Openlist "aarch64_generic"
 Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/luci/" \
 "luci-app-homeproxy luci-i18n-homeproxy-zh-cn luci-app-ramfree luci-i18n-ramfree-zh-cn luci-app-argon-config luci-i18n-argon-config-zh-cn luci-theme-argon"
 Segmentation "https://downloads.immortalwrt.org/releases/24.10-SNAPSHOT/packages/aarch64_generic/packages/" \
 "ddns-scripts_aliyun "
 fi
+Openlist "aarch64_generic"
 Segmentation "https://dl.openwrt.ai/releases/24.10/packages/aarch64_generic/kiddin9/" \
 "luci-app-unishare unishare webdav2 luci-app-v2ray-server sunpanel luci-app-sunpanel"
 # Segmentation "https://op.dllkids.xyz/packages/aarch64_generic/" \
